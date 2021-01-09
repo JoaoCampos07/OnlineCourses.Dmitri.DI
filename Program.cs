@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Autofac;
+using System;
 
 namespace OnlineCourses.Dmitri.DI
 {
@@ -54,6 +55,12 @@ namespace OnlineCourses.Dmitri.DI
     {
         static void Main(string[] args)
         {
+            var builder = new ContainerBuilder();
+            //register components before build
+            builder.RegisterType<ConsoleLog>().As<ILog>();
+            builder.RegisterType<Engine>();
+            builder.RegisterType<Car>();
+
             var log = new ConsoleLog();
             var engine = new Engine(log);
             var car = new Car(log, engine);
