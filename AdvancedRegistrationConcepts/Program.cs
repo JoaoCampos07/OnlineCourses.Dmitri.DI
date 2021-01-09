@@ -4,87 +4,25 @@ using System;
 
 namespace AdvancedRegistrationConcepts
 {
-    public interface ILog
+    public class Service
     {
-        void Write(string message);
-    }
-    public class ConsoleLog : ILog
-    {
-        public void Write(string message)
-        {
-            Console.WriteLine(message);
-        }
+        public string DoSomething(int value)
+            => $"I have a {value}";
     }
 
-    public class EmailLog : ILog
+    public class DomainObject
     {
-        private const string adminEmail = "admin@foo.com";
-        public void Write(string message)
-        {
-            Console.WriteLine($"Email sent to : {adminEmail} : {message}");
-        }
-    }
+        private Service service;
+        private int value;
 
-    public class SMSLog : ILog
-    {
-        string phoneNumber;
-
-        public SMSLog(string phoneNumber)
+        public DomainObject(Service service, int value)
         {
-            this.phoneNumber = phoneNumber;
+            this.service = service;
+            this.value = value;
         }
 
-        public void Write(string message)
-        {
-            Console.WriteLine($"SMS to {phoneNumber} : {message}");
-        }
-    }
-
-    public class Engine
-    {
-        private ILog log;
-        private int id;
-
-        public Engine(ILog log)
-        {
-            this.log = log;
-            this.id = new Random().Next();
-        }
-
-        public Engine(ILog log, int id)
-        {
-            this.log = log;
-            this.id = id;
-        }
-
-        public void Ahead(int power)
-        {
-            log.Write($"Engine [{id}] ahead {power}");
-        }
-    }
-
-    public class Car
-    {
-        private ILog log;
-        private Engine engine;
-
-        public Car(Engine engine)
-        {
-            this.engine = engine;
-            this.log = new EmailLog();
-        }
-
-        public Car(ILog log, Engine engine)
-        {
-            this.log = log;
-            this.engine = engine;
-        }
-
-        public void Go()
-        {
-            engine.Ahead(200);
-            log.Write("Car going forward...");
-        }
+        public override string ToString()
+        => this.service.DoSomething(this.value);
     }
 
     class Program
@@ -92,37 +30,16 @@ namespace AdvancedRegistrationConcepts
         static void Main(string[] args)
         {
             var builder = new ContainerBuilder();
+            builder.RegisterType<Service>();
+            builder.RegisterType<DomainObject>();
 
-            //named paramter
-            //builder.RegisterType<SMSLog>().As<ILog>()
-            //    .WithParameter("phoneNumber", "+12345678");
-
-            //typed parameter
-            //builder.RegisterType<SMSLog>()
-            //    .As<ILog>()
-            //    .WithParameter(new TypedParameter(typeof(string), "+12345678"));
-
-            //resolved parameter 
-            //builder.RegisterType<SMSLog>()
-            //    .As<ILog>()
-            //    .WithParameter(
-            //          new ResolvedParameter(
-            //              // predicate
-            //              (pi, ctx) => pi.ParameterType == typeof(string) && pi.Name == "phoneNumber",
-            //              // value accessor
-            //              (pi, ctx) => "+12345678" // here I can use Component context to resolve something
-            //              ));
-
-            builder.Register((c, p) => new SMSLog(p.Named<string>("phoneNumber"))).As<ILog>();
-            // Register SMSLog, specificing the constructor and a needed argument... 
-            // ..Please do this at resolve time
-            
-            Console.WriteLine("About to build container...");
             var container = builder.Build();
+            // Passed Arguments to a obj when we are resolving it.
+            // 1 Way : 
+            // ( I want to provide a value right here )
 
-            var random = new Random();
-            var smsLog = container.Resolve<ILog>(new NamedParameter("phoneNumber", random.Next().ToString())); // Now, I register the SMSLog in such way that it requeries a parameter "phoneNUmber" of type string.
-            smsLog.Write("test message");
+            container.Resolve<DomainObject>(new PositionalParameter(1, 42)); // 1 -> because the parameter is at position 1 in the constructor.
+
         }
     }
 }
