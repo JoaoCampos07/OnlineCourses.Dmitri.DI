@@ -44,7 +44,8 @@ namespace AdvancedRegistrationConcepts
             //Console.WriteLine(obj.ToString());
 
             // 2 Way : Instead of resolving the obj we resolve the facotry
-            var factory = container.Resolve<DomainObject.Factory>();
+            // Resolve delegate factory that makes uses of container and Injects both dependency objs but also params not auto injected
+            var factory = container.Resolve<DomainObject.Factory>(); 
             var obj = factory.Invoke(42);
             Console.WriteLine(obj.ToString());
         }
