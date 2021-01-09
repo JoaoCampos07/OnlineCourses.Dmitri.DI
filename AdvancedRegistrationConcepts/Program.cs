@@ -4,52 +4,27 @@ using System;
 
 namespace AdvancedRegistrationConcepts
 {
-    public class Entity
+    public class Parent
     {
-        public delegate Entity Factory();
-
-        private static Random random = new Random();
-        private int number;
-
-        public Entity()
-        {
-            number = random.Next();
-        }
-
         public override string ToString()
-         => "test" + number.ToString();
+        => "I'm your father";
     }
 
-    public class ViewModel
+    public class Child
     {
-        // We are using DI container to inject a factory which is actually own by other class
-        private readonly Entity.Factory factory;
-
-        public ViewModel(Entity.Factory factory)
-        {
-            this.factory = factory;
-        }
-
-        // We want to construct a instante of Entity using DI
-        public void Method()
-        {
-            var entity = factory.Invoke();
-            Console.WriteLine(entity);
-        }
+        public string Name { get; set; }
+        public Parent Parent { get; set; }
     }
 
-    class Program
+     class Program
     {
         static void Main(string[] args)
         {
             var cb = new ContainerBuilder();
-            cb.RegisterType<Entity>().InstancePerDependency();
-            cb.RegisterType<ViewModel>();
+            cb.RegisterType<Parent>();
+            cb.RegisterType<Child>();
 
             var container = cb.Build();
-            var vm = container.Resolve<ViewModel>();
-            vm.Method();
-            vm.Method();
         }
     }
 }
