@@ -8,7 +8,12 @@ namespace OnlineCourses.Dmitri.DI
         void Write(string message); 
     }
 
-    public class ConsoleLog : ILog
+    public interface IConsoleLog
+    {
+
+    }
+
+    public class ConsoleLog : ILog 
     {
         public void Write(string message)
         {
@@ -16,7 +21,7 @@ namespace OnlineCourses.Dmitri.DI
         }
     }
 
-    public class EmailLog : ILog
+    public class EmailLog : ILog, IConsoleLog
     {
         private const string adminEmail = "admin@foo.com";
         public void Write(string message)
@@ -66,12 +71,17 @@ namespace OnlineCourses.Dmitri.DI
         {
             var builder = new ContainerBuilder();
             //register components before build
-            builder.RegisterType<EmailLog>().As<ILog>().AsSelf();
+            builder.RegisterType<EmailLog>()
+                .As<ILog>()
+                .As<IConsoleLog>();
             builder.RegisterType<ConsoleLog>().As<ILog>().AsSelf().PreserveExistingDefaults();
             builder.RegisterType<Engine>(); 
             builder.RegisterType<Car>();
 
             IContainer container = builder.Build();
+
+            var log = container.Resolve<ILog>();
+            var log2 = container.Resolve<IConsoleLog>();
 
             var car = container.Resolve<Car>(); 
             car.Go();
