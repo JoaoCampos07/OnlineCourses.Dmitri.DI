@@ -38,8 +38,8 @@ namespace AdvancedRegistrationConcepts
             // 1 Way : 
             // ( I want to provide a value right here )
 
-            container.Resolve<DomainObject>(new PositionalParameter(1, 42)); // 1 -> because the parameter is at position 1 in the constructor.
-
+            var obj = container.Resolve<DomainObject>(new PositionalParameter(1, 42)); // 1 -> because the parameter is at position 1 in the constructor.
+            Console.WriteLine(obj.ToString());
         }
     }
 }
