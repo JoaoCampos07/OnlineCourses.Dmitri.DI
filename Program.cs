@@ -35,6 +35,12 @@ namespace OnlineCourses.Dmitri.DI
             this.id = new Random().Next();
         }
 
+        public Engine(ILog log, int id)
+        {
+            this.log = log;
+            this.id = id;
+        }
+
         public void Ahead(int power)
         {
             log.Write($"Engine [{id}] ahead {power}");
@@ -70,15 +76,14 @@ namespace OnlineCourses.Dmitri.DI
         static void Main(string[] args)
         {
             var builder = new ContainerBuilder();
-            //register components before build
-            //builder.RegisterType<ConsoleLog>().As<ILog>();
+            builder.RegisterType<ConsoleLog>().As<ILog>();
 
-            //Make use of Singleton Design Pattern.
-            // I want every other obj to use the same instance, same obj, of ILog service
-            var log = new ConsoleLog();
-            builder.RegisterInstance(log).As<ILog>();
+            // Way 1 : 
+            //var engine = new Engine(new ConsoleLog(), 123); let's express this by 
+            //builder.RegisterInstance(engine);
 
-            builder.RegisterType<Engine>();
+            // Way 2 :
+            builder.Register((IComponentContext c) => new Engine(c.Resolve<ILog>(), 123)); // We will provide always the same engine
             builder.RegisterType<Car>()
                 .UsingConstructor(typeof(Engine));
 
