@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using System;
+using System.Collections.Generic;
 
 namespace OnlineCourses.Dmitri.DI
 {
@@ -78,19 +79,16 @@ namespace OnlineCourses.Dmitri.DI
             var builder = new ContainerBuilder();
             builder.RegisterType<ConsoleLog>().As<ILog>();
 
-            // Way 1 : 
-            //var engine = new Engine(new ConsoleLog(), 123); let's express this by 
-            //builder.RegisterInstance(engine);
-
-            // Way 2 :
-            builder.Register((IComponentContext c) => new Engine(c.Resolve<ILog>(), 123)); // We will provide always the same engine
-            builder.RegisterType<Car>()
-                .UsingConstructor(typeof(Engine));
+            // Imagine that we would create a generic class, interface (like a new data Structure)
+            // IList<T> --> List<T>
+            // IList<int> --> List<int>
+            builder.RegisterGeneric(typeof(List<>)).As(typeof(IList<>));
 
             IContainer container = builder.Build();
 
-            var car = container.Resolve<Car>(); 
-            car.Go();
+            var myList = container.Resolve<IList<int>>();
+            Console.WriteLine(myList.GetType());
+
         }
     }
 }
