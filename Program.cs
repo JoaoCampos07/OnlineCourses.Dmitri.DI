@@ -16,6 +16,15 @@ namespace OnlineCourses.Dmitri.DI
         }
     }
 
+    public class EmailLog : ILog
+    {
+        private const string adminEmail = "admin@foo.com";
+        public void Write(string message)
+        {
+            Console.WriteLine($"Email sent to : {adminEmail} : {message}");
+        }
+    }
+
     public class Engine
     {
         private ILog log;
@@ -57,14 +66,13 @@ namespace OnlineCourses.Dmitri.DI
         {
             var builder = new ContainerBuilder();
             //register components before build
-            builder.RegisterType<ConsoleLog>().As<ILog>().AsSelf();
-            builder.RegisterType<Engine>(); // If I take this out, AUTOFAC cannot resolve the parameter engine of type Engine
+            builder.RegisterType<EmailLog>().As<ILog>().AsSelf();
+            builder.RegisterType<Engine>(); 
             builder.RegisterType<Car>();
 
             IContainer container = builder.Build();
 
-            var car = container.Resolve<Car>(); // Recursive process...AutoFac will try to solve the car, it sees that it
-            // needs a engine, them it sees that the engine needs a ILog, go get it, resolve the engine, and finally resolve the car.
+            var car = container.Resolve<Car>(); 
             car.Go();
         }
     }
