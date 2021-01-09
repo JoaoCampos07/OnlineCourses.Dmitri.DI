@@ -25,6 +25,8 @@ namespace AdvancedRegistrationConcepts
             cb.RegisterType<Child>();
 
             var container = cb.Build();
+            var parent = container.Resolve<Child>().Parent;
+            Console.WriteLine(parent);
         }
     }
 }
