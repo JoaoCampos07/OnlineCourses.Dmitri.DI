@@ -71,7 +71,13 @@ namespace OnlineCourses.Dmitri.DI
         {
             var builder = new ContainerBuilder();
             //register components before build
-            builder.RegisterType<ConsoleLog>().As<ILog>();
+            //builder.RegisterType<ConsoleLog>().As<ILog>();
+
+            //Make use of Singleton Design Pattern.
+            // I want every other obj to use the same instance, same obj, of ILog service
+            var log = new ConsoleLog();
+            builder.RegisterInstance(log).As<ILog>();
+
             builder.RegisterType<Engine>();
             builder.RegisterType<Car>()
                 .UsingConstructor(typeof(Engine));
