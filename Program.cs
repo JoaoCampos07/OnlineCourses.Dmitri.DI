@@ -67,6 +67,7 @@ namespace OnlineCourses.Dmitri.DI
             var builder = new ContainerBuilder();
             //register components before build
             builder.RegisterType<EmailLog>().As<ILog>().AsSelf();
+            builder.RegisterType<ConsoleLog>().As<ILog>().AsSelf().PreserveExistingDefaults();
             builder.RegisterType<Engine>(); 
             builder.RegisterType<Car>();
 
