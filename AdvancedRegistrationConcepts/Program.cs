@@ -24,7 +24,11 @@ namespace AdvancedRegistrationConcepts
             cb.RegisterType<Parent>();
 
             // 1 Way
-            cb.RegisterType<Child>().PropertiesAutowired(); // System is going to every prop and try to resolve it.
+            //cb.RegisterType<Child>().PropertiesAutowired(); // System is going to every prop and try to resolve it.
+
+            // 2 Way 
+            cb.RegisterType<Child>()
+                .WithProperty("Parent", new Parent());
 
             var container = cb.Build();
             var parent = container.Resolve<Child>().Parent;
