@@ -20,10 +20,18 @@ namespace AdvancedRegistrationConcepts
 
     public class ViewModel
     {
+        private readonly IContainer container;
+
+        public ViewModel(IContainer container)
+        {
+            this.container = container;
+        }
+
         // We want to construct a instante of Entity using DI
         public void Method()
         {
-
+            // this usually wrong...
+            var entity = container.Resolve<Entity>();
         }
     }
 
