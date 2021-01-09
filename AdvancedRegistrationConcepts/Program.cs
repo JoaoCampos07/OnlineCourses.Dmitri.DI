@@ -103,18 +103,25 @@ namespace AdvancedRegistrationConcepts
             //    .WithParameter(new TypedParameter(typeof(string), "+12345678"));
 
             //resolved parameter 
-            builder.RegisterType<SMSLog>()
-                .As<ILog>()
-                .WithParameter(
-                      new ResolvedParameter(
-                          // predicate
-                          (pi, ctx) => pi.ParameterType == typeof(string) && pi.Name == "phoneNumber",
-                          // value accessor
-                          (pi, ctx) => "+12345678" // here I can use Component context to resolve something
-                          ));
+            //builder.RegisterType<SMSLog>()
+            //    .As<ILog>()
+            //    .WithParameter(
+            //          new ResolvedParameter(
+            //              // predicate
+            //              (pi, ctx) => pi.ParameterType == typeof(string) && pi.Name == "phoneNumber",
+            //              // value accessor
+            //              (pi, ctx) => "+12345678" // here I can use Component context to resolve something
+            //              ));
 
+            builder.Register((c, p) => new SMSLog(p.Named<string>("phoneNumber"))).As<ILog>();
+            // Register SMSLog, specificing the constructor and a needed argument... 
+            // ..Please do this at resolve time
+            
+            Console.WriteLine("About to build container...");
             var container = builder.Build();
-            var smsLog = container.Resolve<ILog>();
+
+            var random = new Random();
+            var smsLog = container.Resolve<ILog>(new NamedParameter("phoneNumber", random.Next().ToString())); // Now, I register the SMSLog in such way that it requeries a parameter "phoneNUmber" of type string.
             smsLog.Write("test message");
         }
     }
