@@ -36,12 +36,20 @@ namespace AdvancedRegistrationConcepts
 
             // Method injection
             // 3 Way
-            cb.Register(c =>
-            {
-                var child = new Child();
-                child.SetParent(c.Resolve<Parent>());
-                return child;
-            });
+            //cb.Register(c =>
+            //{
+            //    var child = new Child();
+            //    child.SetParent(c.Resolve<Parent>());
+            //    return child;
+            //});
+
+            // 4 Way
+            cb.RegisterType<Child>()
+                .OnActivated((IActivatedEventArgs<Child> e ) => // Fired everytime that somebody tries to get child
+                {
+                    var p = e.Context.Resolve<Parent>(); // we can have acess to component context here...
+                    e.Instance.SetParent(p); // e.Instance -> Child that is being created...
+                });
 
             var container = cb.Build();
             var parent = container.Resolve<Child>().Parent;
