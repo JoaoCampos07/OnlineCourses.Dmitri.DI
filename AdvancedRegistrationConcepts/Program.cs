@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Autofac;
+using Autofac.Core;
+using System;
 
 namespace AdvancedRegistrationConcepts
 {
@@ -89,7 +91,31 @@ namespace AdvancedRegistrationConcepts
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var builder = new ContainerBuilder();
+
+            //named paramter
+            //builder.RegisterType<SMSLog>().As<ILog>()
+            //    .WithParameter("phoneNumber", "+12345678");
+
+            //typed parameter
+            //builder.RegisterType<SMSLog>()
+            //    .As<ILog>()
+            //    .WithParameter(new TypedParameter(typeof(string), "+12345678"));
+
+            //resolved parameter 
+            builder.RegisterType<SMSLog>()
+                .As<ILog>()
+                .WithParameter(
+                      new ResolvedParameter(
+                          // predicate
+                          (pi, ctx) => pi.ParameterType == typeof(string) && pi.Name == "phoneNumber",
+                          // value accessor
+                          (pi, ctx) => "+12345678" // here I can use Component context to resolve something
+                          ));
+
+            var container = builder.Build();
+            var smsLog = container.Resolve<ILog>();
+            smsLog.Write("test message");
         }
     }
 }

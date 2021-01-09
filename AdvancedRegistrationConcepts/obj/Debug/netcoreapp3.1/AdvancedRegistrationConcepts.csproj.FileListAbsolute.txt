@@ -1,0 +1,16 @@
+C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\AdvancedRegistrationConcepts\bin\Debug\netcoreapp3.1\AdvancedRegistrationConcepts.exe
+C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\AdvancedRegistrationConcepts\bin\Debug\netcoreapp3.1\AdvancedRegistrationConcepts.deps.json
+C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\AdvancedRegistrationConcepts\bin\Debug\netcoreapp3.1\AdvancedRegistrationConcepts.runtimeconfig.json
+C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\AdvancedRegistrationConcepts\bin\Debug\netcoreapp3.1\AdvancedRegistrationConcepts.runtimeconfig.dev.json
+C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\AdvancedRegistrationConcepts\bin\Debug\netcoreapp3.1\AdvancedRegistrationConcepts.dll
+C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\AdvancedRegistrationConcepts\bin\Debug\netcoreapp3.1\AdvancedRegistrationConcepts.pdb
+C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\AdvancedRegistrationConcepts\bin\Debug\netcoreapp3.1\Autofac.dll
+C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\AdvancedRegistrationConcepts\bin\Debug\netcoreapp3.1\System.Diagnostics.DiagnosticSource.dll
+C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\AdvancedRegistrationConcepts\obj\Debug\netcoreapp3.1\AdvancedRegistrationConcepts.csprojAssemblyReference.cache
+C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\AdvancedRegistrationConcepts\obj\Debug\netcoreapp3.1\AdvancedRegistrationConcepts.AssemblyInfoInputs.cache
+C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\AdvancedRegistrationConcepts\obj\Debug\netcoreapp3.1\AdvancedRegistrationConcepts.AssemblyInfo.cs
+C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\AdvancedRegistrationConcepts\obj\Debug\netcoreapp3.1\AdvancedRegistrationConcepts.csproj.CoreCompileInputs.cache
+C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\AdvancedRegistrationConcepts\obj\Debug\netcoreapp3.1\AdvancedRegistrationConcepts.csproj.CopyComplete
+C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\AdvancedRegistrationConcepts\obj\Debug\netcoreapp3.1\AdvancedRegistrationConcepts.dll
+C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\AdvancedRegistrationConcepts\obj\Debug\netcoreapp3.1\AdvancedRegistrationConcepts.pdb
+C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\AdvancedRegistrationConcepts\obj\Debug\netcoreapp3.1\AdvancedRegistrationConcepts.genruntimeconfig.cache
