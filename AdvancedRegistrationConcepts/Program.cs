@@ -15,6 +15,8 @@ namespace AdvancedRegistrationConcepts
         private Service service;
         private int value;
 
+        public delegate DomainObject Factory(int value); // we specify params that are NOT auto injected by AutoFac 
+
         public DomainObject(Service service, int value)
         {
             this.service = service;
@@ -38,7 +40,12 @@ namespace AdvancedRegistrationConcepts
             // 1 Way : 
             // ( I want to provide a value right here )
 
-            var obj = container.Resolve<DomainObject>(new PositionalParameter(1, 42)); // 1 -> because the parameter is at position 1 in the constructor.
+            //var obj = container.Resolve<DomainObject>(new PositionalParameter(1, 42)); // 1 -> because the parameter is at position 1 in the constructor.
+            //Console.WriteLine(obj.ToString());
+
+            // 2 Way : Instead of resolving the obj we resolve the facotry
+            var factory = container.Resolve<DomainObject.Factory>();
+            var obj = factory.Invoke(42);
             Console.WriteLine(obj.ToString());
         }
     }
