@@ -14,3 +14,5 @@ C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\obj\Debug\net5.0\OnlineCourses
 C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\obj\Debug\net5.0\ref\OnlineCourses.Dmitri.DI.dll
 C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\obj\Debug\net5.0\OnlineCourses.Dmitri.DI.pdb
 C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\obj\Debug\net5.0\OnlineCourses.Dmitri.DI.genruntimeconfig.cache
+C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\bin\Debug\net5.0\Autofac.dll
+C:\GIT\Training Main proj\OnlineCourses.Dmitri.DI\obj\Debug\net5.0\OnlineCourses.Dmitri.DI.csproj.CopyComplete
