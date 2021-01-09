@@ -22,7 +22,9 @@ namespace AdvancedRegistrationConcepts
         {
             var cb = new ContainerBuilder();
             cb.RegisterType<Parent>();
-            cb.RegisterType<Child>();
+
+            // 1 Way
+            cb.RegisterType<Child>().PropertiesAutowired(); // System is going to every prop and try to resolve it.
 
             var container = cb.Build();
             var parent = container.Resolve<Child>().Parent;
