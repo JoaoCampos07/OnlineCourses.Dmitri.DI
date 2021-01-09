@@ -57,11 +57,11 @@ namespace OnlineCourses.Dmitri.DI
         {
             var builder = new ContainerBuilder();
             //register components before build
-            builder.RegisterType<ConsoleLog>().As<ILog>();
+            builder.RegisterType<ConsoleLog>().As<ILog>().AsSelf();
             builder.RegisterType<Engine>(); // If I take this out, AUTOFAC cannot resolve the parameter engine of type Engine
             builder.RegisterType<Car>();
 
-            var container = builder.Build();
+            IContainer container = builder.Build();
 
             var car = container.Resolve<Car>(); // Recursive process...AutoFac will try to solve the car, it sees that it
             // needs a engine, them it sees that the engine needs a ILog, go get it, resolve the engine, and finally resolve the car.
