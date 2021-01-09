@@ -22,10 +22,19 @@ namespace AdvancedRegistrationConcepts
 
     public class ViewModel
     {
+        // We are using DI container to inject a factory which is actually own by other class
+        private readonly Entity.Factory factory;
+
+        public ViewModel(Entity.Factory factory)
+        {
+            this.factory = factory;
+        }
+
         // We want to construct a instante of Entity using DI
         public void Method()
         {
-
+            var entity = factory.Invoke();
+            Console.WriteLine(entity);
         }
     }
 
