@@ -6,6 +6,8 @@ namespace AdvancedRegistrationConcepts
 {
     public class Entity
     {
+        public delegate Entity Factory();
+
         private static Random random = new Random();
         private int number;
 
@@ -20,18 +22,10 @@ namespace AdvancedRegistrationConcepts
 
     public class ViewModel
     {
-        private readonly IContainer container;
-
-        public ViewModel(IContainer container)
-        {
-            this.container = container;
-        }
-
         // We want to construct a instante of Entity using DI
         public void Method()
         {
-            // this usually wrong...
-            var entity = container.Resolve<Entity>();
+
         }
     }
 
@@ -39,7 +33,14 @@ namespace AdvancedRegistrationConcepts
     {
         static void Main(string[] args)
         {
+            var cb = new ContainerBuilder();
+            cb.RegisterType<Entity>().InstancePerDependency();
+            cb.RegisterType<ViewModel>();
 
+            var container = cb.Build();
+            var vm = container.Resolve<ViewModel>();
+            vm.Method();
+            vm.Method();
         }
     }
 }
