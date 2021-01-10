@@ -51,8 +51,12 @@ namespace AdvancedRegistrationConcepts
                 .Where(t => t.Name.EndsWith("Log")) // I want to register only types that have a name that ends with Log
                 .Except<EmailLog>() // I dont want EmailLog to be register and be given for service ILog
                 .Except<ConsoleLog>(c => c.As<ILog>().SingleInstance()) // I dont want to register ConsoleLog. I want it to be register this way...
+                .Except<Child>(c => c.WithProperty("Parent", new Parent()))
                 .AsSelf(); // All types are register was components without service
 
+            var container = builder.Build();
+            var parent = container.Resolve<Child>().Parent;
+            Console.WriteLine(parent.ToString());
         }
     }
 }
