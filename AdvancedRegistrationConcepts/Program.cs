@@ -27,11 +27,8 @@ namespace AdvancedRegistrationConcepts
             var assembly = Assembly.GetExecutingAssembly();
             var builder = new ContainerBuilder();
             builder.RegisterAssemblyTypes(assembly)
-                .PropertiesAutowired();
+                .Where(t => t.Name.EndsWith("Log")); // I want to register only types that have a name that ends with Log
 
-            var container = builder.Build();
-            var parent = container.Resolve<Child>().Parent;
-            Console.WriteLine(parent.ToString());
         }
     }
 }
