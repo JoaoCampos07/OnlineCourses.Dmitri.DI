@@ -54,6 +54,12 @@ namespace AdvancedRegistrationConcepts
                 .Except<Child>(c => c.WithProperty("Parent", new Parent()))
                 .AsSelf(); // All types are register was components without service
 
+            // 2 Way : To not specify ILOG, using reflection
+            //builder.RegisterAssemblyTypes(assembly)
+            //    .Except<EmailLog>()
+            //    .Where(t => t.Name.EndsWith("Log"))
+            //    .As(t => t.GetInterfaces()[0]);
+
             var container = builder.Build();
             var parent = container.Resolve<Child>().Parent;
             Console.WriteLine(parent.ToString());
