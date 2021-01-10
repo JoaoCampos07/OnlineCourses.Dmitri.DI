@@ -14,6 +14,24 @@ Dependency :
 Container : 
     The dependecies are fullfil by a container. Manages the components that make up the application.
 
+
+Section : Registration Concepts
+1) Scenario (without DI)
+2) Registering Types (Reflection Components)
+3) Default Registrations
+4) Choice of Constructor
+5) Registering Instances (Instance Components)
+6) Lambda Expression Components
+7) Open Generic Components
+
+Section : Advanced Registration Concepts
+1) Passing Parameters to Register()
+2) Delegate Factories
+3) Objects on Demand
+4) Property and Method Injection
+5) Scanning for Types
+6) Scanning for Modules
+
 Operations : 
 Registering Types (Reflection Components)
 Default Registrarions 
