@@ -1,14 +1,7 @@
 ﻿
--- Terms -- Terminology -- 
-
-Dependency Injection : 
-
-
-
 -- AUTOFAC -- 
+-- Terminology -- 
 
-What are components in AUTOFAC terminology ? 
-R: 
 Component : (the class itself like ConsoleLog)
 	A body of code that declares the services it provides and the dependencies it consumes.
 
@@ -28,3 +21,7 @@ Choice of constructor when registering the component
 Registering Instances (Register Pre-defined components by me)
 Lambda Expression Components
 Open Generic Components
+
+
+-- How to push to multiple repositories ? 
+R : https://jigarius.com/blog/multiple-git-remote-repositories
