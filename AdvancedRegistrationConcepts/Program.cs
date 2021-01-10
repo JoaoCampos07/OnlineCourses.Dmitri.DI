@@ -41,28 +41,26 @@ namespace AdvancedRegistrationConcepts
             => Parent = parent;
     }
 
-     class Program
+    // Module responsbile for registering the class's : Child and Parent
+    public class ParentChildModule : Autofac.Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            builder.RegisterType<Parent>();
+            builder.Register(c => new Child() { Parent = c.Resolve<Parent>() });
+        }
+    }
+
+    class Program
     {
         static void Main(string[] args)
         {
-            var assembly = Assembly.GetExecutingAssembly();
             var builder = new ContainerBuilder();
-            builder.RegisterAssemblyTypes(assembly)
-                .Where(t => t.Name.EndsWith("Log")) // I want to register only types that have a name that ends with Log
-                .Except<EmailLog>() // I dont want EmailLog to be register and be given for service ILog
-                .Except<ConsoleLog>(c => c.As<ILog>().SingleInstance()) // I dont want to register ConsoleLog. I want it to be register this way...
-                .Except<Child>(c => c.WithProperty("Parent", new Parent()))
-                .AsSelf(); // All types are register was components without service
-
-            // 2 Way : To not specify ILOG, using reflection
-            //builder.RegisterAssemblyTypes(assembly)
-            //    .Except<EmailLog>()
-            //    .Where(t => t.Name.EndsWith("Log"))
-            //    .As(t => t.GetInterfaces()[0]);
+            builder.RegisterAssemblyModules(typeof(Program).Assembly); // 1 Way
+            builder.RegisterAssemblyModules<ParentChildModule>(typeof(Program).Assembly); // 2 Way
 
             var container = builder.Build();
-            var parent = container.Resolve<Child>().Parent;
-            Console.WriteLine(parent.ToString());
+            Console.WriteLine(container.Resolve<Child>().Parent);
         }
     }
 }
