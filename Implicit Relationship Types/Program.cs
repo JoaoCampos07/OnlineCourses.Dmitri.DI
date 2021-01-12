@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Autofac.Features.OwnedInstances;
 using System;
 
 namespace Implicit_Relationship_Types
@@ -43,17 +44,18 @@ namespace Implicit_Relationship_Types
 
         public class Reporting
         {
-            private readonly Lazy<ConsoleLog> log; // This is the same was having a delegate like : () => new ConsoleLog() ... that is called when we try to access the value
+            private readonly Owned<ConsoleLog> log;
 
-            public Reporting(Lazy<ConsoleLog> log)
+            public Reporting(Owned<ConsoleLog> log)
             {
                 this.log = log;
-                Console.WriteLine("Reporting Component created.");
+                Console.WriteLine("Reporting initialized");
             }
 
-            public void Report()
+            public void ReportOnce() // We create the report only once, them we dont need console log anymore
             {
                 log.Value.Write("Log started");
+                log.Dispose();
             }
         }
 
@@ -64,7 +66,8 @@ namespace Implicit_Relationship_Types
             builder.RegisterType<Reporting>();
             using (var c = builder.Build()) // When Runtime leaves this using the objs forcely go to garbage automatically
             {
-                c.Resolve<Reporting>().Report();
+                c.Resolve<Reporting>().ReportOnce();
+                Console.WriteLine("Done reporting.");
             }
         }
     }

@@ -16,3 +16,9 @@ Implicit Relationship Types :
 Lazy Dependency : Used when we have expensive to construct objects. So, the object is only loaded when I try to get the value. 
 				  Container will Auto-initialize it with code(callback function/delegate) that resolves T, when we try to get his value.
 				  Getting myField.Value constructs and returns a fully-initialized T (whatever that is...)
+
+Owned Dependency : Can be released by the owner when no longer requeried. So this is cool to dispose objects safely and automatically for us.
+				   So, is particular useful for IDisposable because Autofac handles the disposal.
+				   Using myField.Value access the owned objec. 
+				   use myField.Dispose() any time you want.
+				   
