@@ -23,8 +23,12 @@ Owned Dependency : Can be released by the owner when no longer requeried. So thi
 				   use myField.Dispose() any time you want.
 
 Dynamic Instantion : Injects an auto-generated feactory for my component
-					 Allows me to Resolve<T>() without dependencies of AutoFAC. Without making use of their API's.  
+					 Allows me to Resolve<T>() without dependencies of AutoFAC. Without making use of their API's. (Of course, behind this scenes it uses the container) 
 					 I dont use something like builder.Register((c, p) => new Reporting(c.Resolve<ConsoleLog>())).As<ILog>();
 					 instead i inject in my component the dependency like so : Func<T>...
 					 Them Why call myField() to construct the dependency with all his dependencies initialized.
 					 If i decide to abandon AUTOFAC I still calling a FUNC<T> a type of .NET. I not using AUTOFAC.
+
+Parameterized Instantiation : Like the previous one make an auto-generated factory.
+							  with this one i can provide a Func<TArg1, TArg2, T> instead of just Func<T>
+							  Them I call myField("John", 123)

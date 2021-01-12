@@ -45,16 +45,17 @@ namespace Implicit_Relationship_Types
         public class Reporting
         {
             private readonly Func<ConsoleLog> consoleLog;
+            private readonly Func<string, SMSLog> smsLog;
 
-            public Reporting(Func<ConsoleLog> consoleLog)
+            public Reporting(Func<ConsoleLog> consoleLog, Func<string, SMSLog> smsLog)
             {
                 this.consoleLog = consoleLog;
+                this.smsLog = smsLog;
             }
 
             public void Report()
             {
-                consoleLog().Write("Reporting to console");
-                consoleLog().Write("And Once again");
+                smsLog("+123456").Write("Texting admins...");
             }
         }
 
@@ -62,6 +63,7 @@ namespace Implicit_Relationship_Types
         {
             var builder = new ContainerBuilder();
             builder.RegisterType<ConsoleLog>();
+            builder.RegisterType<SMSLog>();
             builder.RegisterType<Reporting>();
             using (var c = builder.Build()) // When Runtime leaves this using the objs forcely go to garbage automatically
             {
