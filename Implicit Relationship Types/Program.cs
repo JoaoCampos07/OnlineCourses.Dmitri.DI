@@ -44,18 +44,17 @@ namespace Implicit_Relationship_Types
 
         public class Reporting
         {
-            private readonly Owned<ConsoleLog> log;
+            private readonly Func<ConsoleLog> consoleLog;
 
-            public Reporting(Owned<ConsoleLog> log)
+            public Reporting(Func<ConsoleLog> consoleLog)
             {
-                this.log = log;
-                Console.WriteLine("Reporting initialized");
+                this.consoleLog = consoleLog;
             }
 
-            public void ReportOnce() // We create the report only once, them we dont need console log anymore
+            public void Report()
             {
-                log.Value.Write("Log started");
-                log.Dispose();
+                consoleLog().Write("Reporting to console");
+                consoleLog().Write("And Once again");
             }
         }
 
@@ -66,7 +65,7 @@ namespace Implicit_Relationship_Types
             builder.RegisterType<Reporting>();
             using (var c = builder.Build()) // When Runtime leaves this using the objs forcely go to garbage automatically
             {
-                c.Resolve<Reporting>().ReportOnce();
+                c.Resolve<Reporting>().Report();
                 Console.WriteLine("Done reporting.");
             }
         }

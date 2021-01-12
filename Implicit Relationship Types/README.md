@@ -21,4 +21,10 @@ Owned Dependency : Can be released by the owner when no longer requeried. So thi
 				   So, is particular useful for IDisposable because Autofac handles the disposal.
 				   Using myField.Value access the owned objec. 
 				   use myField.Dispose() any time you want.
-				   
+
+Dynamic Instantion : Injects an auto-generated feactory for my component
+					 Allows me to Resolve<T>() without dependencies of AutoFAC. Without making use of their API's.  
+					 I dont use something like builder.Register((c, p) => new Reporting(c.Resolve<ConsoleLog>())).As<ILog>();
+					 instead i inject in my component the dependency like so : Func<T>...
+					 Them Why call myField() to construct the dependency with all his dependencies initialized.
+					 If i decide to abandon AUTOFAC I still calling a FUNC<T> a type of .NET. I not using AUTOFAC.
