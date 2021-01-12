@@ -14,7 +14,6 @@ Dependency :
 Container : 
     The dependecies are fullfil by a container. Manages the components that make up the application.
 
-
 Section : Registration Concepts
 1) Scenario (without DI)
 2) Registering Types (Reflection Components)
@@ -32,14 +31,15 @@ Section : Advanced Registration Concepts
 5) Scanning for Types
 6) Scanning for Modules
 
-Operations : 
-Registering Types (Reflection Components)
-Default Registrarions 
-Choice of constructor when registering the component
-Registering Instances (Register Pre-defined components by me)
-Lambda Expression Components
-Open Generic Components
-
+Section : Implicit Relationship Types
+1) Delayed Instantion
+2) Controlled Instantion
+3) Dynamic Instantion 
+4) Parameterized Instantion 
+5) Enumeration 
+6) Metadata Interrogation
+7) Keyed Service Lookup
+8) Container INdependence
 
 -- How to push to multiple repositories ? 
 R : https://jigarius.com/blog/multiple-git-remote-repositories
