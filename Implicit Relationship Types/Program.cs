@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Autofac.Features.Metadata;
 using Autofac.Features.OwnedInstances;
 using System;
 using System.Collections.Generic;
@@ -45,27 +46,27 @@ namespace Implicit_Relationship_Types
 
         public class Reporting
         {
-            private readonly IList<ILog> allLogs;
+            private readonly Meta<ConsoleLog> log;
 
-            public Reporting(IList<ILog> allLogs)
+            public Reporting(Meta<ConsoleLog> log)
             {
-                this.allLogs = allLogs;
+                this.log = log;
             }
 
             public void Report()
             {
-                foreach (var log in this.allLogs)
-                {
-                    Console.WriteLine($"Hello this is {log.GetType().Name}");
-                }
+                log.Value.Write("Starting report...");
+
+                // What is the log level ? ...maybe extra operations are needed
+                if (log.Metadata["mode"] as string == "verbose")
+                    log.Value.Write($"VERBOSE MODE: Logger started on {DateTime.Now}");
             }
         }
 
         static void Main(string[] args)
         {
             var builder = new ContainerBuilder();
-            builder.RegisterType<ConsoleLog>().As<ILog>();
-            builder.Register(c => new SMSLog("+123456789")).As<ILog>();
+            builder.RegisterType<ConsoleLog>().WithMetadata("mode", "verbose");
             builder.RegisterType<Reporting>();
             using (var c = builder.Build()) // When Runtime leaves this using the objs forcely go to garbage automatically
             {

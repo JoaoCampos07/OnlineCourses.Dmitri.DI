@@ -40,3 +40,12 @@ Enumeration : Injectin an enumeration (e.g.: IEnumerable<T>, IList<T> or ICollec
 			  This is cool to safe resolve some objects.
 				scope.Resolve<ILog>() will throw if no ILog services registered
 				scope.Resolve<IList<ILog>>() will yield an empty list, NO exception !
+
+Metadata Interrogation : I can attach metadata to components and make conditional logic based on this Metadata that is passed.
+						 Is used injecting and storing a Meta<T>
+						 RegisterType<T>().WithMetadata(...)
+							- Weakly typed
+							- Strongly typed (lambda syntax)
+						 We can access this metadata like so : 
+							myField.Metadata["foo"]
+							myField.Value -> to get the object inside : T
