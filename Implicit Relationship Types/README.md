@@ -32,3 +32,11 @@ Dynamic Instantion : Injects an auto-generated feactory for my component
 Parameterized Instantiation : Like the previous one make an auto-generated factory.
 							  with this one i can provide a Func<TArg1, TArg2, T> instead of just Func<T>
 							  Them I call myField("John", 123)
+
+Enumeration : Injectin an enumeration (e.g.: IEnumerable<T>, IList<T> or ICollection<T>...)
+			  ... gets you one of each registered object of type T
+			  Register both COnsoleLog and SMSLog for the service ILog, if I inject IList<ILog>. I will have an new of instance of ConsoleLog and SMSLog 
+			  for me to use.
+			  This is cool to safe resolve some objects.
+				scope.Resolve<ILog>() will throw if no ILog services registered
+				scope.Resolve<IList<ILog>>() will yield an empty list, NO exception !

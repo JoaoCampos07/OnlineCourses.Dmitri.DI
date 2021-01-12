@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Autofac.Features.OwnedInstances;
 using System;
+using System.Collections.Generic;
 
 namespace Implicit_Relationship_Types
 {
@@ -44,31 +45,31 @@ namespace Implicit_Relationship_Types
 
         public class Reporting
         {
-            private readonly Func<ConsoleLog> consoleLog;
-            private readonly Func<string, SMSLog> smsLog;
+            private readonly IList<ILog> allLogs;
 
-            public Reporting(Func<ConsoleLog> consoleLog, Func<string, SMSLog> smsLog)
+            public Reporting(IList<ILog> allLogs)
             {
-                this.consoleLog = consoleLog;
-                this.smsLog = smsLog;
+                this.allLogs = allLogs;
             }
 
             public void Report()
             {
-                smsLog("+123456").Write("Texting admins...");
+                foreach (var log in this.allLogs)
+                {
+                    Console.WriteLine($"Hello this is {log.GetType().Name}");
+                }
             }
         }
 
         static void Main(string[] args)
         {
             var builder = new ContainerBuilder();
-            builder.RegisterType<ConsoleLog>();
-            builder.RegisterType<SMSLog>();
+            builder.RegisterType<ConsoleLog>().As<ILog>();
+            builder.Register(c => new SMSLog("+123456789")).As<ILog>();
             builder.RegisterType<Reporting>();
             using (var c = builder.Build()) // When Runtime leaves this using the objs forcely go to garbage automatically
             {
                 c.Resolve<Reporting>().Report();
-                Console.WriteLine("Done reporting.");
             }
         }
     }
