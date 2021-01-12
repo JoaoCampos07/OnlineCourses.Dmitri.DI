@@ -10,3 +10,9 @@ R:  A direct dependency relationshipt is when, a component needs another. For ex
 
 	In a implicit relatioship types, instead of just injecting the "engine" that the "car" needs. 
 	I might inject a Func<Engine> or a Lazy<Engine>. This change the behavior of how the Injection Mecanism works !
+
+Implicit Relationship Types : 
+
+Lazy Dependency : Used when we have expensive to construct objects. So, the object is only loaded when I try to get the value. 
+				  Container will Auto-initialize it with code(callback function/delegate) that resolves T, when we try to get his value.
+				  Getting myField.Value constructs and returns a fully-initialized T (whatever that is...)
