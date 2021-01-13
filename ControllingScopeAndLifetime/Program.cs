@@ -1,77 +1,66 @@
 ﻿using Autofac;
+using ControllingScopeAndLifetime;
 using System;
+using System.Collections.Generic;
 
 namespace ControllingScopeAndLifetime
 {
-    public interface ILog : IDisposable
+    public interface IResource : IDisposable
     {
-        void Write(string msg);
+
     }
 
-    public class ConsoleLog : ILog
+    public class SingletonResource : IResource
     {
-        public ConsoleLog()
+        public SingletonResource()
         {
-            Console.WriteLine($"Console Log create at {DateTime.Now.Ticks}");
+            Console.WriteLine("Instance per application lifetime Created");
         }
 
         public void Dispose()
         {
-            Console.WriteLine("Console Log no longer required,"); // This will tell us when the component is throw out by GC
+            Console.WriteLine("Instance per application lifetime destroyed");
         }
-
-        public void Write(string msg) => Console.WriteLine(msg);
     }
-
-    public class SMSLog : ILog
+    public class InstantPerDependencyResource : IResource
     {
-        private readonly string phoneNumber;
-
-        public SMSLog(string phoneNumber)
+        public InstantPerDependencyResource()
         {
-            this.phoneNumber = phoneNumber;
+            Console.WriteLine("Instance per dependency created");
         }
 
         public void Dispose()
         {
+            Console.WriteLine("Instance per dependency destroyed");
         }
+    }
 
-        public void Write(string msg) => Console.WriteLine($"SMS to {phoneNumber} : {msg}");
+    public class ResourceManager
+    {
+        public IEnumerable<IResource> Resources { get; set; }
+
+        public ResourceManager(IEnumerable<IResource> resources)
+        {
+            Resources = resources;
+        }
     }
 
     class Program
     {
         static void Main(string[] args)
         {
-            // I want my components to life was long was I want
-            var builder = new ContainerBuilder();
-            builder.RegisterType<ConsoleLog>().As<ILog>()
-                .InstancePerMatchingLifetimeScope("foo");
+            var cb = new ContainerBuilder();
+            cb.RegisterType<ResourceManager>().SingleInstance();
+            cb.RegisterType<SingletonResource>().As<IResource>().SingleInstance();
+            cb.RegisterType<InstantPerDependencyResource>().As<IResource>();
 
-            var container = builder.Build();
-
-            // instead of using container.Resolve<ILog>()...we are going to restrain the Lifetime of the ILog
-            using (var scope1 = container.BeginLifetimeScope("foo"))
+            using (var container = cb.Build())
+            using (var scope = container.BeginLifetimeScope())
             {
-                for (int i = 0; i < 3; i++)
-                {
-                    scope1.Resolve<ILog>(); // just one console log obj 
-                }
-
-                using (var scope2 = scope1.BeginLifetimeScope())
-                {
-                    for (int i = 0; i < 3; i++)
-                    {
-                        scope2.Resolve<ILog>();  // just one console log inside Matthcing Lifetime, even if we have nested Lifetime
-                    }
-                }
+                scope.Resolve<ResourceManager>();
             }
 
-            // This will give error, because there is no TAG to do matching
-            //using (var scope3 = container.BeginLifetimeScope())
-            //{
-            //    scope3.Resolve<ILog>();
-            //}
+            // Because Resource Manager is a singleton it continues to have an hold on InstantPerDependencyResource (which is per request but remains for the lifetime of the app)
         }
     }
 }
