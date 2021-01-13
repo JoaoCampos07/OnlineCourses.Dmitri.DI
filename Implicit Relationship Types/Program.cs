@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Autofac.Features.Indexed;
 using Autofac.Features.Metadata;
 using Autofac.Features.OwnedInstances;
 using System;
@@ -44,31 +45,34 @@ namespace Implicit_Relationship_Types
             public void Write(string msg) => Console.WriteLine($"SMS to {phoneNumber} : {msg}");
         }
 
+        public class Settings
+        {
+            public string LogMode { get; set; }
+        }
+
         public class Reporting
         {
-            private readonly Meta<ConsoleLog> log;
+            private readonly IIndex<string, ILog> logs;
 
-            public Reporting(Meta<ConsoleLog> log)
+            public Reporting(IIndex<string, ILog> logs)
             {
-                this.log = log;
+                this.logs = logs;
             }
 
             public void Report()
             {
-                log.Value.Write("Starting report...");
-
-                // What is the log level ? ...maybe extra operations are needed
-                if (log.Metadata["mode"] as string == "verbose")
-                    log.Value.Write($"VERBOSE MODE: Logger started on {DateTime.Now}");
+                logs["sms"].Write("Starting report output");
             }
         }
 
         static void Main(string[] args)
         {
             var builder = new ContainerBuilder();
-            builder.RegisterType<ConsoleLog>().WithMetadata("mode", "verbose");
+            builder.RegisterType<ConsoleLog>().Keyed<ILog>("cmd");
+            builder.Register(c => new SMSLog("+12345678")).Keyed<ILog>("sms");
             builder.RegisterType<Reporting>();
-            using (var c = builder.Build()) // When Runtime leaves this using the objs forcely go to garbage automatically
+
+            using (var c = builder.Build())
             {
                 c.Resolve<Reporting>().Report();
             }

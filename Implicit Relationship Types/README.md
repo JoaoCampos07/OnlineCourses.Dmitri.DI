@@ -1,4 +1,15 @@
 ﻿
+
+Section : Implicit Relationship Types
+Class 1) Delayed Instantion
+Class 2) Controlled Instantion
+Class 3) Dynamic Instantion 
+Class 4) Parameterized Instantion 
+Class 5) Enumeration 
+Class 6) Metadata Interrogation
+Class 7) Keyed Service Lookup
+Class 8) Container INdependence
+
 QUESTIONS :
 
 What is a Implicit Relationshipt Type ? 
@@ -49,3 +60,9 @@ Metadata Interrogation : I can attach metadata to components and make conditiona
 						 We can access this metadata like so : 
 							myField.Metadata["foo"]
 							myField.Value -> to get the object inside : T
+
+Keyed Service Lookup : Simlar to the Enumeration but is like using a Dictionary with Key/Values
+					   , so that we can pick up a service using the right key
+					   we used injecting and storing IIndex<TKey,T>
+					   Register with : 
+						builder.RegisterType<ConsoleLog>().Keyed<ILog>("sms")

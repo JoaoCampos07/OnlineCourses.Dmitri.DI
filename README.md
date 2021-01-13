@@ -8,6 +8,8 @@ Component : (the class itself like ConsoleLog)
 Services : (interfaces like ILog)
 	A contract between a providing and consuming component
 
+Example : builder.RegisterType<MyComponent>().As<IService>();
+
 Dependency :
     A service required by a component (normally they appear in the constructor)
 
