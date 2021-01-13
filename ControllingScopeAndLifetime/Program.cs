@@ -5,62 +5,36 @@ using System.Collections.Generic;
 
 namespace ControllingScopeAndLifetime
 {
-    public interface IResource : IDisposable
+    public interface ILog : IDisposable
     {
-
+        void Write(string msg);
     }
 
-    public class SingletonResource : IResource
+    public class ConsoleLog : ILog
     {
-        public SingletonResource()
+        public ConsoleLog()
         {
-            Console.WriteLine("Instance per application lifetime Created");
+            Console.WriteLine($"Console Log create at {DateTime.Now.Ticks}");
         }
 
         public void Dispose()
         {
-            Console.WriteLine("Instance per application lifetime destroyed");
+            Console.WriteLine("Console Log no longer required,"); // This will tell us when the component is throw out by GC
         }
+
+        public void Write(string msg) => Console.WriteLine(msg);
     }
-    public class InstantPerDependencyResource : IResource
-    {
-        public InstantPerDependencyResource()
-        {
-            Console.WriteLine("Instance per dependency created");
-        }
-
-        public void Dispose()
-        {
-            Console.WriteLine("Instance per dependency destroyed");
-        }
-    }
-
-    public class ResourceManager
-    {
-        public IEnumerable<IResource> Resources { get; set; }
-
-        public ResourceManager(IEnumerable<IResource> resources)
-        {
-            Resources = resources;
-        }
-    }
-
     class Program
     {
         static void Main(string[] args)
         {
-            var cb = new ContainerBuilder();
-            cb.RegisterType<ResourceManager>().SingleInstance();
-            cb.RegisterType<SingletonResource>().As<IResource>().SingleInstance();
-            cb.RegisterType<InstantPerDependencyResource>().As<IResource>();
-
-            using (var container = cb.Build())
+            var builder = new ContainerBuilder();
+            builder.RegisterType<ConsoleLog>();
+            var container = builder.Build();
             using (var scope = container.BeginLifetimeScope())
             {
-                scope.Resolve<ResourceManager>();
+                scope.Resolve<ConsoleLog>();
             }
-
-            // Because Resource Manager is a singleton it continues to have an hold on InstantPerDependencyResource (which is per request but remains for the lifetime of the app)
         }
     }
 }
