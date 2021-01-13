@@ -6,40 +6,17 @@ using System.Threading;
 
 namespace ControllingScopeAndLifetime
 {
-    public interface ILog : IDisposable
+    // Call something when COntainer is being build...
+    public class StartLog : IStartable
     {
-        void Write(string msg);
-    }
-
-    public class ConsoleLog : ILog
-    {
-        public ConsoleLog()
+        public StartLog()
         {
-            Console.WriteLine($"Console Log create at {DateTime.Now.Ticks}");
+            Console.WriteLine("Startlog constructured");
         }
-
-        public void Dispose()
+        public void Start()
         {
-            Console.WriteLine("Console Log no longer required,"); // This will tell us when the component is throw out by GC
+            Console.WriteLine("Container being built"); ;
         }
-
-        public void Write(string msg) => Console.WriteLine(msg);
-    }
-
-    public class SMSLog : ILog
-    {
-        private readonly string phoneNumber;
-
-        public SMSLog(string phoneNumber)
-        {
-            this.phoneNumber = phoneNumber;
-        }
-
-        public void Dispose()
-        {
-        }
-
-        public void Write(string msg) => Console.WriteLine($"SMS to {phoneNumber} : {msg}");
     }
 
     class Program
@@ -47,16 +24,12 @@ namespace ControllingScopeAndLifetime
         static void Main(string[] args)
         {
             var builder = new ContainerBuilder();
-            builder.RegisterType<ConsoleLog>().AsSelf();
+            builder.RegisterType<StartLog>()
+                .AsSelf()
+                .As<IStartable>()
+                .SingleInstance();
 
-            builder.Register<ILog>(c => c.Resolve<ConsoleLog>())
-                .OnActivating(a => a.ReplaceInstance(new SMSLog("+123456789")));
-                
-            using (var scope = builder.Build().BeginLifetimeScope())
-            {
-                var log = scope.Resolve<ILog>();
-                log.Write("Test");
-            }
+            var container = builder.Build();
         }
     }
 }
