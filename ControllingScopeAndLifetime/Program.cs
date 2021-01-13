@@ -46,18 +46,25 @@ namespace ControllingScopeAndLifetime
             // I want my components to life was long was I want
             var builder = new ContainerBuilder();
             builder.RegisterType<ConsoleLog>().As<ILog>()
-                .SingleInstance(); // Everyt time I resolve a component as a service, I get a brand new Console Log, for example
+                .InstancePerLifetimeScope(); 
 
             var container = builder.Build();
 
             // instead of using container.Resolve<ILog>()...we are going to restrain the Lifetime of the ILog
-            using (var scope = container.BeginLifetimeScope())
+            using (var scope1 = container.BeginLifetimeScope())
             {
-                var log = scope.Resolve<ILog>();
-                log.Write("Testing!");
+                for (int i = 0; i < 3; i++)
+                {
+                    scope1.Resolve<ILog>(); // just one console log obj 
+                }
 
-                var log2 = scope.Resolve<ILog>(); // I used the same instance was first command above
-                log.Write("Testing!");
+                using (var scope2 = container.BeginLifetimeScope())
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        scope2.Resolve<ILog>();  // just one console log obj 
+                    }
+                }
             }      
         }
     }
