@@ -46,7 +46,7 @@ namespace ControllingScopeAndLifetime
             // I want my components to life was long was I want
             var builder = new ContainerBuilder();
             builder.RegisterType<ConsoleLog>().As<ILog>()
-                .InstancePerLifetimeScope(); 
+                .InstancePerLifetimeScope();
 
             var container = builder.Build();
 
@@ -57,15 +57,15 @@ namespace ControllingScopeAndLifetime
                 {
                     scope1.Resolve<ILog>(); // just one console log obj 
                 }
+            }
 
-                using (var scope2 = container.BeginLifetimeScope())
+            using (var scope2 = container.BeginLifetimeScope())
+            {
+                for (int i = 0; i < 3; i++)
                 {
-                    for (int i = 0; i < 3; i++)
-                    {
-                        scope2.Resolve<ILog>();  // just one console log obj 
-                    }
+                    scope2.Resolve<ILog>();  // just one console log obj 
                 }
-            }      
+            }
         }
     }
 }
