@@ -47,13 +47,11 @@ namespace ControllingScopeAndLifetime
         static void Main(string[] args)
         {
             var builder = new ContainerBuilder();
-            builder.RegisterType<ConsoleLog>()
-                .As<ILog>()
-                .OnActivating(a =>
-                {
-                    a.ReplaceInstance(new SMSLog("+123456789"));
-                });
-                    
+            builder.RegisterType<ConsoleLog>().AsSelf();
+
+            builder.Register<ILog>(c => c.Resolve<ConsoleLog>())
+                .OnActivating(a => a.ReplaceInstance(new SMSLog("+123456789")));
+                
             using (var scope = builder.Build().BeginLifetimeScope())
             {
                 var log = scope.Resolve<ILog>();
