@@ -36,6 +36,12 @@ namespace ControllingScopeAndLifetime
                 var x  = scope.Resolve<ConsoleLog>();
                 x.Dispose(); // now i responsible for put the obj to garbage...
             }
+
+            using (var scope2 = container.BeginLifetimeScope())
+            {
+                var x = scope2.Resolve<ConsoleLog>();
+                x.Dispose(); // now i responsible for put the obj to garbage...
+            }
         }
     }
 }
