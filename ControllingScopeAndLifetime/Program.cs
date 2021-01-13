@@ -6,48 +6,40 @@ using System.Threading;
 
 namespace ControllingScopeAndLifetime
 {
-    public class Parent
+    public interface ILog : IDisposable
     {
-        public override string ToString()
-        => "I'm your father";
+        void Write(string msg);
     }
 
-    public class Child
+    public class ConsoleLog : ILog
     {
-        public Child()
+        public ConsoleLog()
         {
-            Console.WriteLine("Good Child obj created.");
+            Console.WriteLine($"Console Log create at {DateTime.Now.Ticks}");
         }
 
-        public string Name { get; set; }
-        public Parent Parent { get; set; } // Property Injection is needed here...
-
-        public void SetParent(Parent parent)
-            => Parent = parent;
-
-        public override string ToString()
+        public void Dispose()
         {
-            return "I love you";
+            Console.WriteLine("Console Log no longer required,"); // This will tell us when the component is throw out by GC
         }
+
+        public void Write(string msg) => Console.WriteLine(msg);
     }
 
-    public class BadChild : Child
+    public class SMSLog : ILog
     {
-        public BadChild()
+        private readonly string phoneNumber;
+
+        public SMSLog(string phoneNumber)
         {
-            Console.WriteLine("Bad Child obj created.");
+            this.phoneNumber = phoneNumber;
         }
 
-        public string Name { get; set; }
-        public Parent Parent { get; set; } // Property Injection is needed here...
-
-        public void SetParent(Parent parent)
-            => Parent = parent;
-
-        public override string ToString()
+        public void Dispose()
         {
-            return "I hate you";
         }
+
+        public void Write(string msg) => Console.WriteLine($"SMS to {phoneNumber} : {msg}");
     }
 
     class Program
@@ -55,31 +47,17 @@ namespace ControllingScopeAndLifetime
         static void Main(string[] args)
         {
             var builder = new ContainerBuilder();
-            builder.RegisterType<Parent>();
-            builder.RegisterType<Child>()
+            builder.RegisterType<ConsoleLog>()
+                .As<ILog>()
                 .OnActivating(a =>
                 {
-                    Console.WriteLine("Child Activating");
-                    //a.Instance.Parent = a.Context.Resolve<Parent>();
-
-                    a.ReplaceInstance(new BadChild());
-                })
-                .OnActivated(a =>
-                {
-                    Console.WriteLine("Child Activated");
-                })
-                // raised AFTER the component child is fully constructed
-                .OnRelease(a =>
-                {
-                    Console.WriteLine("Child about to be removed");
+                    a.ReplaceInstance(new SMSLog("+123456789"));
                 });
-
+                    
             using (var scope = builder.Build().BeginLifetimeScope())
             {
-                var child = scope.Resolve<Child>();
-                var parent = child.Parent;
-                Console.WriteLine(child);
-                Console.WriteLine(parent);
+                var log = scope.Resolve<ILog>();
+                log.Write("Test");
             }
         }
     }
