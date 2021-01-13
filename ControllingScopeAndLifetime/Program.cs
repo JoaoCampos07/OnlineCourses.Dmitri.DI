@@ -37,8 +37,16 @@ namespace ControllingScopeAndLifetime
                 {
                     Console.WriteLine("Child Activating");
                     a.Instance.Parent = a.Context.Resolve<Parent>();
+                })
+                .OnActivated(a =>
+                {
+                    Console.WriteLine("Child Activated");
+                })
+                // raised AFTER the component child is fully constructed
+                .OnRelease(a =>
+                {
+                    Console.WriteLine("Child about to be removed");
                 });
-            // raised BEFORE the component child is use, NOT Build.
 
             using (var scope = builder.Build().BeginLifetimeScope())
             {
