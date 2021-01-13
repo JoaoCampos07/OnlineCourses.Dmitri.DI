@@ -46,24 +46,24 @@ namespace ControllingScopeAndLifetime
             // I want my components to life was long was I want
             var builder = new ContainerBuilder();
             builder.RegisterType<ConsoleLog>().As<ILog>()
-                .InstancePerLifetimeScope();
+                .InstancePerMatchingLifetimeScope("foo");
 
             var container = builder.Build();
 
             // instead of using container.Resolve<ILog>()...we are going to restrain the Lifetime of the ILog
-            using (var scope1 = container.BeginLifetimeScope())
+            using (var scope1 = container.BeginLifetimeScope("foo"))
             {
                 for (int i = 0; i < 3; i++)
                 {
                     scope1.Resolve<ILog>(); // just one console log obj 
                 }
-            }
 
-            using (var scope2 = container.BeginLifetimeScope())
-            {
-                for (int i = 0; i < 3; i++)
+                using (var scope2 = scope1.BeginLifetimeScope())
                 {
-                    scope2.Resolve<ILog>();  // just one console log obj 
+                    for (int i = 0; i < 3; i++)
+                    {
+                        scope2.Resolve<ILog>();  // just one console log inside Matthcing Lifetime, even if we have nested Lifetime
+                    }
                 }
             }
         }
