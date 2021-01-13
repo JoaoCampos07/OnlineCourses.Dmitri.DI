@@ -21,6 +21,8 @@ namespace ControllingScopeAndLifetime
         public void Dispose()
         {
             Console.WriteLine("Console Log no longer required,"); // This will tell us when the component is throw out by GC
+            var id = GC.GetGeneration(this);
+            GC.Collect();
         }
 
         public void Write(string msg) => Console.WriteLine(msg);
@@ -33,17 +35,12 @@ namespace ControllingScopeAndLifetime
             //builder.RegisterType<ConsoleLog>();
             builder.RegisterInstance(new ConsoleLog());
 
-            var container = builder.Build();
-            using (var scope = container.BeginLifetimeScope())
+            using (var container = builder.Build())
             {
-                var x  = scope.Resolve<ConsoleLog>();
-                // I managed to dispose the obj somehow ehere
-            }
-
-            using (var scope2 = container.BeginLifetimeScope())
-            {
-                // I would have a disposed obj here...
-                var x = scope2.Resolve<ConsoleLog>();
+                using (var scope = container.BeginLifetimeScope())
+                {
+                    var x = scope.Resolve<ConsoleLog>();
+                }
             }
         }
     }
