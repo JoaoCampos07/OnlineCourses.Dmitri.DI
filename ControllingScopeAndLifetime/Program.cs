@@ -45,7 +45,8 @@ namespace ControllingScopeAndLifetime
         {
             // I want my components to life was long was I want
             var builder = new ContainerBuilder();
-            builder.RegisterType<ConsoleLog>().As<ILog>();
+            builder.RegisterType<ConsoleLog>().As<ILog>()
+                .InstancePerDependency(); // Everyt time I resolve a component as a service, I get a brand new Console Log, for example
 
             var container = builder.Build();
 
@@ -54,7 +55,7 @@ namespace ControllingScopeAndLifetime
             {
                 var log = scope.Resolve<ILog>();
                 log.Write("Testing!");
-            }
+            }      
         }
     }
 }
