@@ -16,7 +16,7 @@ namespace ControllingScopeAndLifetime
     {
         public Child()
         {
-            Console.WriteLine("Child obj created.");
+            Console.WriteLine("Good Child obj created.");
         }
 
         public string Name { get; set; }
@@ -24,6 +24,30 @@ namespace ControllingScopeAndLifetime
 
         public void SetParent(Parent parent)
             => Parent = parent;
+
+        public override string ToString()
+        {
+            return "I love you";
+        }
+    }
+
+    public class BadChild : Child
+    {
+        public BadChild()
+        {
+            Console.WriteLine("Bad Child obj created.");
+        }
+
+        public string Name { get; set; }
+        public Parent Parent { get; set; } // Property Injection is needed here...
+
+        public void SetParent(Parent parent)
+            => Parent = parent;
+
+        public override string ToString()
+        {
+            return "I hate you";
+        }
     }
 
     class Program
@@ -36,7 +60,9 @@ namespace ControllingScopeAndLifetime
                 .OnActivating(a =>
                 {
                     Console.WriteLine("Child Activating");
-                    a.Instance.Parent = a.Context.Resolve<Parent>();
+                    //a.Instance.Parent = a.Context.Resolve<Parent>();
+
+                    a.ReplaceInstance(new BadChild());
                 })
                 .OnActivated(a =>
                 {
@@ -52,7 +78,8 @@ namespace ControllingScopeAndLifetime
             {
                 var child = scope.Resolve<Child>();
                 var parent = child.Parent;
-                Console.WriteLine(parent.ToString());
+                Console.WriteLine(child);
+                Console.WriteLine(parent);
             }
         }
     }
