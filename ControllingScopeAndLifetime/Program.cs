@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace ControllingScopeAndLifetime
 {
-    // Call something when COntainer is being build...
+    // Call something(a component) when COntainer is being build...
     public class StartLog : IStartable
     {
         public StartLog()
