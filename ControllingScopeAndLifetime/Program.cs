@@ -2,6 +2,7 @@
 using ControllingScopeAndLifetime;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace ControllingScopeAndLifetime
 {
@@ -29,18 +30,20 @@ namespace ControllingScopeAndLifetime
         static void Main(string[] args)
         {
             var builder = new ContainerBuilder();
-            builder.RegisterType<ConsoleLog>().ExternallyOwned();
+            //builder.RegisterType<ConsoleLog>();
+            builder.RegisterInstance(new ConsoleLog());
+
             var container = builder.Build();
             using (var scope = container.BeginLifetimeScope())
             {
                 var x  = scope.Resolve<ConsoleLog>();
-                x.Dispose(); // now i responsible for put the obj to garbage...
+                // I managed to dispose the obj somehow ehere
             }
 
             using (var scope2 = container.BeginLifetimeScope())
             {
+                // I would have a disposed obj here...
                 var x = scope2.Resolve<ConsoleLog>();
-                x.Dispose(); // now i responsible for put the obj to garbage...
             }
         }
     }
