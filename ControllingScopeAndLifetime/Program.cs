@@ -66,6 +66,12 @@ namespace ControllingScopeAndLifetime
                     }
                 }
             }
+
+            // This will give error, because there is no TAG to do matching
+            //using (var scope3 = container.BeginLifetimeScope())
+            //{
+            //    scope3.Resolve<ILog>();
+            //}
         }
     }
 }
