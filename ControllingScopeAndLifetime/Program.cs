@@ -29,11 +29,12 @@ namespace ControllingScopeAndLifetime
         static void Main(string[] args)
         {
             var builder = new ContainerBuilder();
-            builder.RegisterType<ConsoleLog>();
+            builder.RegisterType<ConsoleLog>().ExternallyOwned();
             var container = builder.Build();
             using (var scope = container.BeginLifetimeScope())
             {
-                scope.Resolve<ConsoleLog>();
+                var x  = scope.Resolve<ConsoleLog>();
+                x.Dispose(); // now i responsible for put the obj to garbage...
             }
         }
     }
