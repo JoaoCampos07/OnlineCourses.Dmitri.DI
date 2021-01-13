@@ -6,41 +6,45 @@ using System.Threading;
 
 namespace ControllingScopeAndLifetime
 {
-    public interface ILog : IDisposable
+    public class Parent
     {
-        void Write(string msg);
+        public override string ToString()
+        => "I'm your father";
     }
 
-    public class ConsoleLog : ILog
+    public class Child
     {
-        public ConsoleLog()
+        public Child()
         {
-            Console.WriteLine($"Console Log create at {DateTime.Now.Ticks}");
+            Console.WriteLine("Child obj created.");
         }
 
-        public void Dispose()
-        {
-            Console.WriteLine("Console Log no longer required,"); // This will tell us when the component is throw out by GC
-            var id = GC.GetGeneration(this);
-            GC.Collect();
-        }
+        public string Name { get; set; }
+        public Parent Parent { get; set; } // Property Injection is needed here...
 
-        public void Write(string msg) => Console.WriteLine(msg);
+        public void SetParent(Parent parent)
+            => Parent = parent;
     }
+
     class Program
     {
         static void Main(string[] args)
         {
             var builder = new ContainerBuilder();
-            //builder.RegisterType<ConsoleLog>();
-            builder.RegisterInstance(new ConsoleLog());
-
-            using (var container = builder.Build())
-            {
-                using (var scope = container.BeginLifetimeScope())
+            builder.RegisterType<Parent>();
+            builder.RegisterType<Child>()
+                .OnActivating(a =>
                 {
-                    var x = scope.Resolve<ConsoleLog>();
-                }
+                    Console.WriteLine("Child Activating");
+                    a.Instance.Parent = a.Context.Resolve<Parent>();
+                });
+            // raised BEFORE the component child is use, NOT Build.
+
+            using (var scope = builder.Build().BeginLifetimeScope())
+            {
+                var child = scope.Resolve<Child>();
+                var parent = child.Parent;
+                Console.WriteLine(parent.ToString());
             }
         }
     }
