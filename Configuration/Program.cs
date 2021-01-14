@@ -3,58 +3,24 @@ using System;
 
 namespace Configuration
 {
-    public interface IDriver
+    public interface IOperation
     {
-        void Drive();
+        float Calculate(int x, int y);
     }
 
-    public interface IVehicle
+    public class Addition : IOperation
     {
-        void Go();
-    }
-
-    public class Truck : IVehicle
-    {
-        private readonly IDriver driver;
-
-        public Truck(IDriver driver)
+        public float Calculate(int x, int y)
         {
-            this.driver = driver;
-        }
-
-        public void Go()
-        {
-            this.driver.Drive();
+            return x + y;
         }
     }
 
-    public class SaneDriver : IDriver
+    public class Multiplication : IOperation
     {
-        public void Drive()
+        public float Calculate(int x, int y)
         {
-            Console.WriteLine("Drive safely into the destination.");
-        }
-    }
-
-    public class CrazyDriver : IDriver
-    {
-        public void Drive()
-        {
-            Console.WriteLine("Driving too fast and crashing into a tree.");
-        }
-    }
-
-    public class TransportModule : Module
-    {
-        // When i consctruct the module i can control this flag...
-        public bool ObeySpeedLimit { get; set; }
-
-        protected override void Load(ContainerBuilder builder)
-        {
-            if (ObeySpeedLimit)
-                builder.RegisterType<SaneDriver>().As<IDriver>();
-            else
-                builder.RegisterType<CrazyDriver>().As<IDriver>();
+            return x * y;
         }
     }
 
@@ -62,12 +28,6 @@ namespace Configuration
     {
         static void Main(string[] args)
         {
-            var x = new ContainerBuilder();
-            x.RegisterModule(new TransportModule { ObeySpeedLimit = false });
-            using (var container = x.Build())
-            {
-                container.Resolve<IDriver>().Drive();
-            }
         }
     }
 }
