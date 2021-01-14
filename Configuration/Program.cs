@@ -46,9 +46,15 @@ namespace Configuration
 
     public class TransportModule : Module
     {
+        // When i consctruct the module i can control this flag...
+        public bool ObeySpeedLimit { get; set; }
+
         protected override void Load(ContainerBuilder builder)
         {
-            base.Load(builder); 
+            if (ObeySpeedLimit)
+                builder.RegisterType<SaneDriver>();
+            else
+                builder.RegisterType<CrazyDriver>();
         }
     }
 
