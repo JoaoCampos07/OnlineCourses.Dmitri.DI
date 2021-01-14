@@ -63,10 +63,11 @@ namespace Configuration
         static void Main(string[] args)
         {
             var x = new ContainerBuilder();
-            x.RegisterModule(new TransportModule { ObeySpeedLimit = true });
-            var container = x.Build();
-
-            container.Resolve<IDriver>().Drive();
+            x.RegisterModule(new TransportModule { ObeySpeedLimit = false });
+            using (var container = x.Build())
+            {
+                container.Resolve<IDriver>().Drive();
+            }
         }
     }
 }
