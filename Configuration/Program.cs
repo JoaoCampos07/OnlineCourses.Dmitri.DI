@@ -12,7 +12,12 @@ namespace Configuration
         float Calculate(float x, float y);
     }
 
-    public class Addition : IOperation
+    public interface IOtherOperation
+    {
+
+    }
+
+    public class Addition : IOperation, IOtherOperation
     {
         public float Calculate(float x, float y)
         {
@@ -20,7 +25,7 @@ namespace Configuration
         }
     }
 
-    public class Multiplication : IOperation
+    public class Multiplication : IOperation, IOtherOperation
     {
         public float Calculate(float x, float y)
         {
