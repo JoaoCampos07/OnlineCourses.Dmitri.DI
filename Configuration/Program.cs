@@ -52,9 +52,9 @@ namespace Configuration
         protected override void Load(ContainerBuilder builder)
         {
             if (ObeySpeedLimit)
-                builder.RegisterType<SaneDriver>();
+                builder.RegisterType<SaneDriver>().As<IDriver>();
             else
-                builder.RegisterType<CrazyDriver>();
+                builder.RegisterType<CrazyDriver>().As<IDriver>();
         }
     }
 
@@ -62,6 +62,11 @@ namespace Configuration
     {
         static void Main(string[] args)
         {
+            var x = new ContainerBuilder();
+            x.RegisterModule(new TransportModule { ObeySpeedLimit = true });
+            var container = x.Build();
+
+            container.Resolve<IDriver>().Drive();
         }
     }
 }
