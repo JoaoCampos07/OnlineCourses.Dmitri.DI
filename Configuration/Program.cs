@@ -33,6 +33,15 @@ namespace Configuration
         }
     }
 
+    public class CalculationModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            builder.RegisterType<Addition>().As<IOperation>();
+            builder.RegisterType<Multiplication>().As<IOperation>();
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
