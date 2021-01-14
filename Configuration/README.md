@@ -1,4 +1,9 @@
 ﻿
+Section : Configuration
+Class 1) Using Modules
+Class 2) JSON/XML COnfiguration with Microsoft.Extensions.Configuration
+Class 3) Component Options
+Class 4) Configuration of Modules
 
 -- QUESTIONS :
 
