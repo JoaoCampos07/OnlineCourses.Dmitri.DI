@@ -102,9 +102,9 @@ namespace AdvancedTopics
                     swt.ServiceType,
                     (context, parameters) =>
                     {
-                        HandlerFactory provider = context.Resolve<HandlerFactory>();
+                        IHandlerFactory provider = context.Resolve<IHandlerFactory>();
                         // Get the method of the factory to make an handler...GetHandler<T>()
-                        var method = provider.GetType().GetMethod("GetHandler").MakeGenericMethod();
+                        var method = provider.GetType().GetMethod("GetHandler").MakeGenericMethod(swt.ServiceType);
                         return method.Invoke(provider, null);
                     }
                     ),
@@ -114,7 +114,6 @@ namespace AdvancedTopics
                     new[] { service },
                     new ConcurrentDictionary<string,object>()
                 );
-            
         }
     }
 
@@ -123,6 +122,17 @@ namespace AdvancedTopics
         static void Main(string[] args)
         {
             var b = new ContainerBuilder();
+            // Notice : Handlers are not being registered !!
+            b.RegisterType<HandlerFactory>().As<IHandlerFactory>();
+            b.RegisterSource(new HandlerRegistrationSource());
+            b.RegisterType<ConsumerA>();
+            b.RegisterType<ConsumerB>();
+
+            using (var c = b.Build())
+            {
+                c.Resolve<ConsumerA>().DoWork();
+                c.Resolve<ConsumerB>().DoWork();
+            }
         }
     }
 }
