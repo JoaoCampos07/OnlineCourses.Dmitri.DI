@@ -29,6 +29,19 @@ namespace AdvancedTopics
         }
     }
 
+    public interface IHandlerFactory
+    {
+        T GetHandler<T>() where T : BaseHandler;
+    }
+
+    public class HandlerFactory : IHandlerFactory
+    {
+        public T GetHandler<T>() where T : BaseHandler
+        {
+            return Activator.CreateInstance<T>(); // this method does not belong to AutoFac. And is generic to create some obj that is type BaseHandler
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
