@@ -42,6 +42,37 @@ namespace AdvancedTopics
         }
     }
 
+    // Consumer class's that need Handler objs 
+    public class ConsumerA
+    {
+        private readonly HandlerA handlerA;
+
+        public ConsumerA(HandlerA handlerA)
+        {
+            this.handlerA = handlerA;
+        }
+
+        public void DoWork()
+        {
+            Console.WriteLine(handlerA.Handle("Consumer A"));
+        }
+    }
+
+    public class ConsumerB
+    {
+        private readonly HandlerA handlerA;
+
+        public ConsumerB(HandlerA handlerA)
+        {
+            this.handlerA = handlerA;
+        }
+
+        public void DoWork()
+        {
+            Console.WriteLine(handlerA.Handle("Consumer B"));
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
