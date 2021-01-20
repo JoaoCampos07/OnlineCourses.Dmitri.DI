@@ -1,9 +1,11 @@
 ﻿using Autofac;
 using Autofac.Core;
 using Autofac.Core.Activators.Delegate;
+using Autofac.Core.Lifetime;
 using Autofac.Core.Registration;
 using Autofac.Features.ResolveAnything;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace AdvancedTopics
@@ -101,12 +103,16 @@ namespace AdvancedTopics
                     (context, parameters) =>
                     {
                         HandlerFactory provider = context.Resolve<HandlerFactory>();
-                        // Get the method of the factory...GetHandler<T>()
+                        // Get the method of the factory to make an handler...GetHandler<T>()
                         var method = provider.GetType().GetMethod("GetHandler").MakeGenericMethod();
                         return method.Invoke(provider, null);
-                    };
-                    )
-
+                    }
+                    ),
+                    new CurrentScopeLifetime(),
+                    InstanceSharing.None,
+                    InstanceOwnership.OwnedByLifetimeScope,
+                    new[] { service },
+                    new ConcurrentDictionary<string,object>()
                 );
             
         }
