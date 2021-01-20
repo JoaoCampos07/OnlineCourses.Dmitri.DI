@@ -1,3 +1,10 @@
 {
-
+  //ASsembly use to discover types
+  "defaultAssembly": "Configuration",
+  // Define module
+  "modules": [
+    {
+      "type": "Configuration.CalculationModule"
+    }
+  ]
 }

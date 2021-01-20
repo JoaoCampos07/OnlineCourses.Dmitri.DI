@@ -46,6 +46,10 @@
             "Autofac": {
               "target": "Package",
               "version": "[6.1.0, )"
+            },
+            "Autofac.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[4.0.0, )"
             }
           },
           "imports": [
