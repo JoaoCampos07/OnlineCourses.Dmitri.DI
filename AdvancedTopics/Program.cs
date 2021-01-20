@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Autofac.Features.ResolveAnything;
 using System;
 
 namespace AdvancedTopics
@@ -21,6 +22,7 @@ namespace AdvancedTopics
         static void Main(string[] args)
         {
             var b = new ContainerBuilder();
+            b.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
 
             using (var c = b.Build())
             {
