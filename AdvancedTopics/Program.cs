@@ -4,16 +4,28 @@ using System;
 
 namespace AdvancedTopics
 {
-    public interface ICanSpeak
+    // Defines way of generating event handler
+    public abstract class BaseHandler
     {
-        void Speak();
+        public virtual string Handle(string msg)
+        {
+            return "Handled: " + msg;
+        }
     }
 
-    public class Person : ICanSpeak
+    public class HandlerA : BaseHandler
     {
-        public void Speak()
+        public override string Handle(string msg)
         {
-            Console.WriteLine("Hello");
+            return "Handled by A: " + msg;
+        }
+    }
+
+    public class HandlerB : BaseHandler
+    {
+        public override string Handle(string msg)
+        {
+            return "Handled by B: " + msg;
         }
     }
 
@@ -22,12 +34,6 @@ namespace AdvancedTopics
         static void Main(string[] args)
         {
             var b = new ContainerBuilder();
-            b.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
-
-            using (var c = b.Build())
-            {
-                c.Resolve<Person>().Speak();
-            }
         }
     }
 }
