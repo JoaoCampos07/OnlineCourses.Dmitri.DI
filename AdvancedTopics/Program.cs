@@ -70,9 +70,13 @@ namespace AdvancedTopics
             var b = new ContainerBuilder();
             b.RegisterType<OpenCommand>().As<ICommand>();
             b.RegisterType<SaveCommand>().As<ICommand>();
+            b.RegisterType<Button>();
+            b.RegisterType<Editor>();
 
             using (var c = b.Build())
             {
+                var editor = c.Resolve<Editor>();
+                editor.ClickAll();
             }
         }
     }
