@@ -3,6 +3,7 @@ using Autofac.Core;
 using Autofac.Core.Activators.Delegate;
 using Autofac.Core.Lifetime;
 using Autofac.Core.Registration;
+using Autofac.Features.Metadata;
 using Autofac.Features.ResolveAnything;
 using System;
 using System.Collections.Concurrent;
@@ -35,8 +36,9 @@ namespace AdvancedTopics
     public class Button
     {
         private ICommand command;
+        private string name;
 
-        public Button(ICommand command)
+        public Button(ICommand command, string name)
         {
             this.command = command;
         }
@@ -45,6 +47,8 @@ namespace AdvancedTopics
         {
             command.Execute();
         }
+
+        public void PrintMe() => Console.WriteLine($"I am a button called {name}");
     }
 
     public class Editor
@@ -53,12 +57,14 @@ namespace AdvancedTopics
 
         public Editor(IEnumerable<Button> buttons)
         {
-            this.buttons = buttons;
+            this.Buttons = buttons;
         }
+
+        public IEnumerable<Button> Buttons { get => buttons; private set => buttons = value; }
 
         public void ClickAll()
         {
-            foreach (var btn in buttons)
+            foreach (var btn in Buttons)
                 btn.OnClick();
         }
     }
@@ -68,23 +74,23 @@ namespace AdvancedTopics
         static void Main(string[] args)
         {
             var b = new ContainerBuilder();
-            b.RegisterType<OpenCommand>().As<ICommand>();
-            b.RegisterType<SaveCommand>().As<ICommand>();
+            b.RegisterType<OpenCommand>().As<ICommand>()
+                .WithMetadata("Name", "Open");
+            b.RegisterType<SaveCommand>().As<ICommand>()
+                .WithMetadata("Name", "Save");
 
-            // How to set up Connection between command and button ? 
-            //b.RegisterType<Button>();
-            // We need to tell that the button is a adapter 
-            b.RegisterAdapter<ICommand, Button>(cmd => new Button(cmd));
+            // Let's specifiy the name of the button with Metadata
+            b.RegisterAdapter<Meta<ICommand>, Button>(cmd => new Button(cmd.Value, (string)cmd.Metadata["Name"]));
             b.RegisterType<Editor>();
 
             using (var c = b.Build())
             {
                 var editor = c.Resolve<Editor>();
-                editor.ClickAll();
-                // What is happen ? 
-                // Autofac starts resolving Editor, it sees it needs Ienumerable<Buttons>, is going to get a button, 
-                // them to resolve a ICOmmand for the button it needs to fulfill the criteria, one comand one button. 
-                // since OpenCommand and SaveCommand implements ICommand, we needs to create aditional button, to resolve the editor dependencie.
+
+                foreach (var btn in editor.Buttons)
+                {
+                    btn.PrintMe();
+                }
             }
         }
     }
