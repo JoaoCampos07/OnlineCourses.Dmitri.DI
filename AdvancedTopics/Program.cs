@@ -70,7 +70,11 @@ namespace AdvancedTopics
             var b = new ContainerBuilder();
             b.RegisterType<OpenCommand>().As<ICommand>();
             b.RegisterType<SaveCommand>().As<ICommand>();
-            b.RegisterType<Button>();
+
+            // How to set up Connection between command and button ? 
+            //b.RegisterType<Button>();
+            // We need to tell that the button is a adapter 
+            b.RegisterAdapter<ICommand, Button>(cmd => new Button(cmd));
             b.RegisterType<Editor>();
 
             using (var c = b.Build())
