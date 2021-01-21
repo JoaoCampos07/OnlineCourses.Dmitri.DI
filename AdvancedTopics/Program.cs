@@ -47,12 +47,29 @@ namespace AdvancedTopics
         }
     }
 
+    public class Editor
+    {
+        private IEnumerable<Button> buttons;
+
+        public Editor(IEnumerable<Button> buttons)
+        {
+            this.buttons = buttons;
+        }
+
+        public void ClickAll()
+        {
+            foreach (var btn in buttons)
+                btn.OnClick();
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
             var b = new ContainerBuilder();
-
+            b.RegisterType<OpenCommand>().As<ICommand>();
+            b.RegisterType<SaveCommand>().As<ICommand>();
 
             using (var c = b.Build())
             {
