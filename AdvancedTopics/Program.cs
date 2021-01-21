@@ -77,6 +77,12 @@ namespace AdvancedTopics
             {
                 var editor = c.Resolve<Editor>();
                 editor.ClickAll();
+                // Why we get only one button ? 
+                // R: The editor needs a IEnumerable<Buttons> 
+                //    but AUTOFAC sees that it only was a Button component register, and it gives the only one it was.
+                //    Them AUTOFAC continues down the graph and sees that the component Button needs a Component Command
+                //    So it just gives the one that was register first : OpenCommand 
+                //    And all the graph is resolved. 
             }
         }
     }
