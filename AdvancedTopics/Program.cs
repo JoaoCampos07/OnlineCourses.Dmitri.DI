@@ -30,12 +30,23 @@ namespace AdvancedTopics
         static void Main(string[] args)
         {
             var b = new ContainerBuilder();
-            b.RegisterType<ParentWithProp>();
+            b.RegisterType<ParentWithProp>()
+                .InstancePerLifetimeScope() // shares a instance like this...
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
             // Why this cmp cannot be register was a Instance per Dependency (default if not defined): 
             // Well, instance per depdency, is like injecting a brand new obj everytime is needed 
             // With Circular dependencies we can reach a Stack Overflow. 
             // Because everytime you create a Child for a Parent, and them a Parent for a child, everytime is a new obj so : 
             // Parent1 -> Child1 -> Parent2 -> Child2 etc...infinite loop
+
+            b.RegisterType<ChildWithProp>()
+                .InstancePerLifetimeScope() 
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
+
+            using (var c = b.Build())
+            {
+                Console.WriteLine(c.Resolve<ParentWithProp>().Child.Parent);
+            }
         }
     }
 }
