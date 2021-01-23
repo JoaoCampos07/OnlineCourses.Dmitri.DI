@@ -11,6 +11,7 @@ using System.Collections.Generic;
 
 namespace AdvancedTopics
 {
+    // Obj1 with Prop injection and Obj2 with Prop injection
     public class ParentWithProp
     {
         public ChildWithProp Child { get; set; }
@@ -25,9 +26,42 @@ namespace AdvancedTopics
         public override string ToString() => "Child";
     }
 
+    // Obj1 with Constructor injection and Obj2 with Prop injection
+    public class ParentWithConstructor1
+    {
+        public ChildWithProperty1 Child { get; set; }
+
+        public ParentWithConstructor1(ChildWithProperty1 child)
+        {
+            Child = child;
+        }
+
+        public override string ToString() => "Parent with Child with Property.";
+    }
+
+    public class ChildWithProperty1
+    {
+        public ParentWithConstructor1 Parent { get; set; }
+
+        public override string ToString() => "Child with Parent with constuctor.";
+        
+    }
+
     class Program
     {
         static void Main(string[] args)
+        {
+            var b = new ContainerBuilder();
+            b.RegisterType<ParentWithConstructor1>().InstancePerLifetimeScope();
+            b.RegisterType<ChildWithProperty1>()
+                .InstancePerLifetimeScope()
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
+
+            using (var c = b.Build())
+                Console.WriteLine(c.Resolve<ParentWithConstructor1>().Child.Parent);
+        }
+
+        static void Main_(string[] args)
         {
             var b = new ContainerBuilder();
             b.RegisterType<ParentWithProp>()
@@ -40,7 +74,7 @@ namespace AdvancedTopics
             // Parent1 -> Child1 -> Parent2 -> Child2 etc...infinite loop
 
             b.RegisterType<ChildWithProp>()
-                .InstancePerLifetimeScope() 
+                .InstancePerLifetimeScope()
                 .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
 
             using (var c = b.Build())
