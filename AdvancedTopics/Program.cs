@@ -24,6 +24,25 @@ namespace AdvancedTopics
         }
     }
 
+    //Decorator style
+    // Logger to log the initialize of reporting and the end of the reporting
+    public class ReportingServiceWithLogging : IReportingService
+    {
+        private IReportingService _reportingService;
+
+        public ReportingServiceWithLogging(IReportingService reportingService)
+        {
+            _reportingService = reportingService;
+        }
+
+        public void Report()
+        {
+            Console.WriteLine("Beginning of making the report...");
+            this._reportingService.Report();
+            Console.WriteLine("Report is concluded");
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
