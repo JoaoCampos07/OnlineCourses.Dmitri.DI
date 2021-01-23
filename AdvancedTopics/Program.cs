@@ -28,17 +28,17 @@ namespace AdvancedTopics
     // Logger to log the initialize of reporting and the end of the reporting
     public class ReportingServiceWithLogging : IReportingService
     {
-        private IReportingService _reportingService;
+        private IReportingService _serviceToDecorate;
 
         public ReportingServiceWithLogging(IReportingService reportingService)
         {
-            _reportingService = reportingService;
+            _serviceToDecorate = reportingService;
         }
 
         public void Report()
         {
             Console.WriteLine("Beginning of making the report...");
-            this._reportingService.Report();
+            this._serviceToDecorate.Report();
             Console.WriteLine("Report is concluded");
         }
     }
@@ -49,10 +49,11 @@ namespace AdvancedTopics
         {
             // Can the Autofac provider the right components whem we implement the Decorator pattern ? 
             var b = new ContainerBuilder();
-            b.RegisterType<ReportingServiceWithLogging>().As<IReportingService>();
-            // Like it is above, it will end up in infinte loop or throught exception, because the reportingServiceWithLogging component
-            // needs a IReportingService, so...Autofac understands that he needs a instance of itself. (ReportingServiceWIthLogging is as Service IReportingService)
-            // And it sees that the instance that it needs (himself) needs also a IReportingService and so on, and so on, in a infinite loop.
+            b.RegisterType<ReportingService>().Named<IReportingService>("reporting");// mark by name
+            b.RegisterDecorator<IReportingService>( // when asked for IReporting Service we will give ReportingServiceWithLogging with service to decorate!
+             (context, service) => new ReportingServiceWithLogging(service),
+             "reporting" // key to distingish service that we will be decorated, for other implementations of IReportingService
+            );
 
             using (var c = b.Build())
             {
