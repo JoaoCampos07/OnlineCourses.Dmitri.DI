@@ -3,6 +3,7 @@ using Autofac.Core;
 using Autofac.Core.Activators.Delegate;
 using Autofac.Core.Lifetime;
 using Autofac.Core.Registration;
+using Autofac.Features.AttributeFilters;
 using Autofac.Features.Metadata;
 using Autofac.Features.ResolveAnything;
 using System;
@@ -44,6 +45,17 @@ namespace AdvancedTopics
         public void Display() => Console.WriteLine("Displaying a millennium-old piece.");
     }
 
+    public class ArtDisplay
+    {
+        private IArtWork _artWork;
+
+        // Filter the components so that we got the right component to be injected using the metadata
+        // (Obsiouly this is for when we have 2 compoents was 1 service)
+        public ArtDisplay([MetadataFilter("Age", 100)]IArtWork artWork)
+        {
+            _artWork = artWork;
+        }
+    }
     class Program
     {
         static void Main(string[] args)
