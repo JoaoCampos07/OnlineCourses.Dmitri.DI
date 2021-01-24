@@ -60,7 +60,9 @@ namespace AdvancedTopics
     [Intercept(typeof(CallLogger))]
     public class Audit : IAudit
     {
-        public int Start(DateTime reportData)
+        // Dynamic proxy, works by sub-classing  with concrete implementations. So this method needs to be virtual 
+        // so Dynamic proxy will implemented.
+        public virtual int Start(DateTime reportData)
         {
             Console.WriteLine($"Starting the report on {reportData}");
             return 42;
@@ -71,7 +73,19 @@ namespace AdvancedTopics
     {
         static void Main(string[] args)
         {
+            var cb = new ContainerBuilder();
+            cb.Register(r => new CallLogger(Console.Out))
+                .AsSelf();
 
+            cb.RegisterType<Audit>()
+                .EnableClassInterceptors(); // inspect the type and "see" the Intercept attribute so that it creates a obj that herites from Audit and make use of CallLogger method
+            // and not the Audit method.
+
+            using (var container = cb.Build())
+            {
+                var audit = container.Resolve<Audit>();
+                audit.Start(DateTime.Now);
+            }
         }
     }
 }
