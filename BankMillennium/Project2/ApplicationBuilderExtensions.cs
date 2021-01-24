@@ -33,7 +33,7 @@ namespace BM.Infrastructure.Ioc.Autofac
 
             if (initializersContainer != null)
             {
-                foreach (var initializer in initializersContainer.Initializers)
+                foreach (IIocInitializer initializer in initializersContainer.Initializers)
                 {
                     initializer.Initialize(initializersContainer.Resolver);
                 }

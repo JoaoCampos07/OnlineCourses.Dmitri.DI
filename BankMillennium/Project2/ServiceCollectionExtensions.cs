@@ -53,7 +53,7 @@ namespace BM.Infrastructure.Ioc.Autofac
             }
 
             var builder = new ContainerBuilder();
-            var configurator = new AutofacIoCConfigurator(builder);
+            AutofacIoCConfigurator configurator = new AutofacIoCConfigurator(builder); //sets up the class in obj to abstact. we will not use container builder obj directly
 
             // register modules
             RegisterModules(configurator, modules);
@@ -65,13 +65,14 @@ namespace BM.Infrastructure.Ioc.Autofac
 
             container = builder.Build();
 
-            configurator.SetContainer(container);
+            configurator.SetContainer(container); // we will use AutofacIoCConfigurator obj to interact with Autofac API
 
-            return new AutofacServiceProvider(container); ;
+            return new AutofacServiceProvider(container);
         }
 
         private static void RegisterModules(IIocConfigurator configurator, IEnumerable<IIocModule> modules)
         {
+            // the modules will millennium are all IIocModule
             modules?
                 .ToList()
                 .ForEach(module => module.Configure(configurator));

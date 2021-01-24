@@ -6,6 +6,7 @@
 
     using global::Autofac;
 
+    // Methods to abstract the use of Autofac and make our life easier
     public class AutofacIoCConfigurator : IIocConfigurator, IIocResolver
     {
         private readonly ContainerBuilder containerBuilder;
@@ -62,6 +63,7 @@
             this.containerBuilder.Register(context => factory()).AsSelf().SingleInstance();
         }
 
+        // Cooll, method to resolve depdencies
         public T Resolve<T>() where T : class
         {
             return this.container.Resolve<T>();
