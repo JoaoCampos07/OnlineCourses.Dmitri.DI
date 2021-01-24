@@ -14,64 +14,42 @@ using System.ComponentModel.Composition;
 
 namespace AdvancedTopics
 {
-    // Natural way of attach metadata to components
+    // Agreggate Services : Treat mulitple services was only one service using Autofac
 
-    // Obj that represents the metadata that we want 
-    [MetadataAttribute]
-    public class AgeMetadataAttribute : Attribute
+    public interface IService1 { }
+    public interface IService2 { }
+    public interface IService3 { }
+    public interface IService4 { }
+
+    public class Service1 : IService1 { }
+    public class Service2 : IService2 { }
+    public class Service3 : IService3 { }
+    public class Service4 : IService4 { }
+
+    public class Consumer
     {
-        public int Age { get; set; }
+        private readonly IService1 _service1;
+        private readonly IService2 _service2;
+        private readonly IService3 _service3;
+        private readonly IService4 _service4;
 
-        public AgeMetadataAttribute(int age)
+        public Consumer(IService1 service1, IService2 service2, IService3 service3, IService4 service4)
         {
-            Age = age;
+            _service1 = service1;
+            _service2 = service2;
+            _service3 = service3;
+            _service4 = service4;
         }
     }
 
-    public interface IArtWork
-    {
-        void Display();
-    }
-
-    [AgeMetadataAttribute(100)]
-    public class CenturyArtwork : IArtWork
-    {
-        public void Display() => Console.WriteLine("Displaying a century-old piece.");
-        
-    }
-
-    [AgeMetadataAttribute(1000)]
-    public class MillenniumArtwork : IArtWork
-    {
-        public void Display() => Console.WriteLine("Displaying a millennium-old piece.");
-    }
-
-    public class ArtDisplay
-    {
-        private IArtWork _artWork;
-
-        // Filter the components so that we got the right component to be injected using the metadata
-        // (Obsiouly this is for when we have 2 compoents was 1 service)
-        public ArtDisplay([MetadataFilter("Age", 1000)]IArtWork artWork)
-        {
-            _artWork = artWork;
-        }
-
-        public void Display() => this._artWork.Display();
-    }
     class Program
     {
         static void Main(string[] args)
         {
             var b = new ContainerBuilder();
-            b.RegisterModule<AttributedMetadataModule>();
-            b.RegisterType<CenturyArtwork>().As<IArtWork>();
-            b.RegisterType<MillenniumArtwork>().As<IArtWork>();
-            b.RegisterType<ArtDisplay>();
 
             using (var c = b.Build())
             {
-                c.Resolve<ArtDisplay>().Display();
             }
         }
     }
