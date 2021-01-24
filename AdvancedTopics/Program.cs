@@ -26,19 +26,22 @@ namespace AdvancedTopics
     public class Service3 : IService3 { }
     public class Service4 : IService4 { }
 
+    // Single interface that agregates all the services, exposing them was props
+    public interface IMyAggregateService
+    {
+        IService1 Service1 { get; }
+        IService2 Service2 { get; }
+        IService3 Service3 { get; }
+        IService4 Service4 { get; }
+    }
+
     public class Consumer
     {
-        private readonly IService1 _service1;
-        private readonly IService2 _service2;
-        private readonly IService3 _service3;
-        private readonly IService4 _service4;
+        public readonly IMyAggregateService _service1;
 
-        public Consumer(IService1 service1, IService2 service2, IService3 service3, IService4 service4)
+        public Consumer(IMyAggregateService service1)
         {
             _service1 = service1;
-            _service2 = service2;
-            _service3 = service3;
-            _service4 = service4;
         }
     }
 
@@ -47,6 +50,8 @@ namespace AdvancedTopics
         static void Main(string[] args)
         {
             var b = new ContainerBuilder();
+            // How all the services that consumer obj needs are injected using the interface IMyAggreagateService ? 
+
 
             using (var c = b.Build())
             {
