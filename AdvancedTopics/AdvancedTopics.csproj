@@ -7,6 +7,9 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.1.0" />
+    <PackageReference Include="autofac.extras.aggregateservice" Version="6.0.0" />
+    <PackageReference Include="Autofac.extras.attributemetadata" Version="6.0.0" />
+    <PackageReference Include="autofac.extras.dynamicproxy" Version="6.0.0" />
   </ItemGroup>
 
 </Project>
