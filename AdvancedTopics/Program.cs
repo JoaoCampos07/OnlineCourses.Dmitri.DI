@@ -50,6 +50,20 @@ namespace AdvancedTopics
         }
     }
 
+    public interface IAudit
+    {
+        int Start(DateTime reportData);
+    }
+
+    public class Audit : IAudit
+    {
+        public int Start(DateTime reportData)
+        {
+            Console.WriteLine($"Starting the report on {reportData}");
+            return 42;
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
