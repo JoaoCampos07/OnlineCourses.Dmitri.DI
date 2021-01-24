@@ -5,6 +5,7 @@ using Autofac.Core.Lifetime;
 using Autofac.Core.Registration;
 using Autofac.Extras.AggregateService;
 using Autofac.Extras.AttributeMetadata;
+using Autofac.Extras.DynamicProxy;
 using Autofac.Features.AttributeFilters;
 using Autofac.Features.Metadata;
 using Autofac.Features.ResolveAnything;
@@ -55,6 +56,8 @@ namespace AdvancedTopics
         int Start(DateTime reportData);
     }
 
+    // Whever somebody calls a member of Audit, which is a method, please intercept that call and log it into File system.
+    [Intercept(typeof(CallLogger))]
     public class Audit : IAudit
     {
         public int Start(DateTime reportData)
