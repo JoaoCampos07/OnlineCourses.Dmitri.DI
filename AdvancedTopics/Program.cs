@@ -3,6 +3,7 @@ using Autofac.Core;
 using Autofac.Core.Activators.Delegate;
 using Autofac.Core.Lifetime;
 using Autofac.Core.Registration;
+using Autofac.Extras.AggregateService;
 using Autofac.Extras.AttributeMetadata;
 using Autofac.Features.AttributeFilters;
 using Autofac.Features.Metadata;
@@ -51,10 +52,18 @@ namespace AdvancedTopics
         {
             var b = new ContainerBuilder();
             // How all the services that consumer obj needs are injected using the interface IMyAggreagateService ? 
-
+            // R: A dynamic class will be created (using Castle.Core), implementing the IMyAggregateService 
+            b.RegisterAggregateService<IMyAggregateService>();
+            // register all those concrete class 
+            b.RegisterAssemblyTypes(typeof(Program).Assembly)
+                .Where(t => t.Name.StartsWith("Service"))
+                .AsImplementedInterfaces();
+            b.RegisterType<Consumer>();
 
             using (var c = b.Build())
             {
+                var consumer = c.Resolve<Consumer>();
+                Console.WriteLine(consumer._service1.Service3.GetType().Name);
             }
         }
     }
