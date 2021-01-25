@@ -43,5 +43,27 @@ Section : Implicit Relationship Types
 7) Keyed Service Lookup
 8) Container INdependence
 
+Section : Controlling Scope and Lifetime
+ 1) Instance Scope
+ 2) Captive Dependencies
+ 3) Disposal 
+ 4) Lifetime Events
+ 5) Running code at Startup
+
+Section : Configuration
+ 1) Using Modules
+ 2) JSON/XML COnfiguration with Microsoft.Extensions.Configuration
+ 3) Component Options
+ 4) Configuration of Modules
+
+Section : Configuration
+ 1) Registration Souces : Let you affect the process of container type resolution and add additional registrations unexplicit.
+ 2) Adapter Pattern using DI Container like Autofac
+ 3) Decorator Pattern using DI Container like Autofac
+ 4) Circular depdencies
+ 5) Attribute Based Metadata
+ 6) Aggregate Services
+ 7) Type Interceptors
+
 -- How to push to multiple repositories ? 
 R : https://jigarius.com/blog/multiple-git-remote-repositories
